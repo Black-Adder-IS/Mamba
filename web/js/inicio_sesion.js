@@ -47,6 +47,6 @@ $( document ).ready(function() {
         $('#mensaje').text("Sesión Cerrada ");
         localStorage.removeItem("tipo");
         localStorage.removeItem("id");
-        window.location.href = "/WebApplication1/";
+        window.location.href = "index.html";
     });
 });

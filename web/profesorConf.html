@@ -162,18 +162,21 @@
                                         </label>
                                     </div>
                                 </div>
+                            </form>
                                 <div class="row">
-                                    <div class="large-4 columns text-center">
-                                        <a href="#" class="button success small">Subir video</a>
-                                    </div>
-                                    <div class="large-4 columns text-center">
-                                        <a href="#" class="button success small">Subir constancia</a>
-                                    </div>
+                                    <form method="POST" action="SubirArchivos?correo_profesor=10@gmail.com" enctype="multipart/form-data">
+                                        <div class="large-4 columns text-center">
+                                            <input type="submit" class="button success small" value="Subir video">
+                                        </div>
+                                        <div class="large-4 columns text-center">
+                                            <input type="submit" class="button success small" value="Subir constancia">
+                                            <input type="file" name="File">
+                                        </div>
+                                    </form>
                                     <div class="large-4 columns text-center">
                                         <a href="#" id="subir" class="button small">Guardar cambios</a>
                                     </div>
                                 </div>
-                            </form>
                             <a href="#" class="button alert" data-reveal-id="borrarModal" data-reveal>Borrar Cuenta</a>
                         </div>
                     </div>
@@ -183,7 +186,7 @@
         <script src="js/vendor/jquery.js"></script>
         <script src="js/foundation.min.js"></script>
         <script>
-                                        $(document).foundation();
+            $(document).foundation();
         </script>
     </body>
 </html>

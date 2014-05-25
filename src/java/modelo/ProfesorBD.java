@@ -9,8 +9,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.sql.Statement;
 
 /**
@@ -37,7 +35,6 @@ public class ProfesorBD extends ConexionBD{
     public boolean iniciar_sesion(String id, String contrasena) throws SQLException{
         boolean encontrado;
         String consulta = "select * from Profesor where profesor_correo = '" + id + "' AND profesor_contrasena = '" + contrasena +"';";
-        System.out.println(consulta);
         Connection conexion;
         try {
             conexion = getConexion();
@@ -180,11 +177,11 @@ public class ProfesorBD extends ConexionBD{
         profesor.cursos = cursoBD.obten_cursos_profesor(profesor.id, profesor.correo);
         return profesor;
     }
-    public boolean crear_profesor(String nombre, String correo, String contrasenia, String certificado, String url) {
+    public boolean crear_profesor(String nombre, String correo, String contrasenia) {
         String consulta = "SELECT * FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + correo  +"';";
         String query = "INSERT INTO `Escuela`.`Profesor` (" +
-                "`profesor_correo`, `profesor_nombre`, `profesor_contrasena`, `profesor_url_certificado`, `profesor_url_video`) " +
-                "VALUES ('" + correo + "', '" + nombre + "', '" + contrasenia + "', '" + certificado + "', '" + url + "');";
+                "`profesor_correo`, `profesor_nombre`, `profesor_contrasena`) " +
+                "VALUES ('" + correo + "', '" + nombre + "', '" + contrasenia + "');";
 
         boolean encontrado = false;
                 
@@ -220,23 +217,37 @@ public class ProfesorBD extends ConexionBD{
     }
     
     public int editar_profesor(String correoA, String nombre, String correo, String contrasenia, String url_video, String url_constancia) {
+        String consulta = "SELECT * FROM `Escuela`.`Profesor`";
         int ex = -1;
-        String query = "UPDATE `Escuela`.`Profesor` SET";
+        String query = "";
+        
         if (!nombre.equals("")) {
             query += " `profesor_nombre`='" + nombre + "',";
         }
+        
         if (!correo.equals("")) {
-            query += " `profesor_correo`='" + correo + "', `profesor_url_certificado`='" + url_constancia
-                    + "', `profesor_url_video`='" + url_video + "',";
+            query += " `profesor_correo`='" + correo + "',";
         }
+        
         if (!contrasenia.equals("")) {
             query += " `profesor_contrasena`='" + contrasenia + "',";
         }
-        int temp = query.length()-1;
-        if (query.charAt(temp) == ',') {
-                query = query.substring(0, temp);
+        
+        if (!url_video.equals("")) {
+             query += "`profesor_url_video`='" + url_video + "',";
+        } else if (!url_constancia.equals("")) {
+            query += "`profesor_url_certificado`='" + url_constancia + "',";
         }
-        query += " WHERE `profesor_correo`='" + correoA + "';";
+        
+        if (query.length() != 0) {
+            query = "UPDATE `Escuela`.`Profesor` SET" + query;
+            int temp = query.length() - 1;
+            query = query.substring(0, temp);
+            query += " WHERE `profesor_correo`='" + correoA + "';";
+
+        } else {
+            return ex;
+        }
         try {
             Connection conexion = super.conectarBD();
             Statement st = conexion.createStatement();

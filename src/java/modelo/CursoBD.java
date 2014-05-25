@@ -146,7 +146,7 @@ public class CursoBD extends ConexionBD{
      * @return indicador si se pudo o no hacer la actualización en la base de datos
      * @throws SQLException 
      */
-    public boolean solicitar_curso(String alumno_correo, int curso_id) throws SQLException{
+    public boolean solicitar_curso(String alumno_correo, int curso_id) throws SQLException {
         String consulta = "UPDATE `Escuela`.`Curso` SET estudiante_correo='" + alumno_correo + "', curso_estado='Confirmando' " +
                 "WHERE curso_id = " + curso_id + ";";
         System.out.println(consulta);
@@ -161,21 +161,25 @@ public class CursoBD extends ConexionBD{
     }
     
     public boolean crear_curso(String correo, String tinicio, String tfinal, String tipo) {
-        String consulta = "SELECT * FROM `Escuela`.`Curso` WHERE `profesor_correo`='" + correo  +"' AND `curso_inicio`='" + tinicio + "' AND (`curso_estado`='Cursando' OR `curso_tipo`='" + tipo + "');";
+        String consulta_1 = "SELECT * FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + correo + "' AND `profesor_url_certificado` IS NULL OR `profesor_url_video` IS NULL";
+        String consulta_2 = "SELECT * FROM `Escuela`.`Curso` WHERE `profesor_correo`='" + correo  +"' AND `curso_inicio`='" + tinicio + "' AND (`curso_estado`='Cursando' OR `curso_tipo`='" + tipo + "');";
+
         String query = "INSERT INTO `Escuela`.`Curso` (`profesor_correo`, `estudiante_correo`, `curso_inicio`, `curso_final`, `curso_tipo`, "
                 + "`curso_estado`, `curso_nota`, `curso_calificacion`) VALUES ('" + correo + "', NULL, '" + tinicio + "', '" + tfinal
                 + "','" + tipo + "', 'Espera', NULL, NULL);";
         boolean encontrado = false;
                
         Connection conexion = super.conectarBD();
-        ResultSet resultado = super.consultar(conexion, consulta);
+        ResultSet resultado_1 = super.consultar(conexion, consulta_1);
+        ResultSet resultado_2 = super.consultar(conexion, consulta_2);
             
-        if (resultado == null) {
+        if (resultado_1 == null || resultado_2 == null) {
             return false;
         }
         
         try {
-            encontrado = resultado.next();
+            encontrado = resultado_1.next();
+            encontrado = encontrado || resultado_2.next();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -195,11 +199,10 @@ public class CursoBD extends ConexionBD{
         }
         
         super.desconectarBD(conexion);
-        return !encontrado;
+        return true;
     }
     
     public boolean asignar_curso(String id, boolean asignar) {
-        String consulta = "SELECT `curso_estado` FROM `Escuela`.`Curso` WHERE `curso_id`='" + id  +"' AND `curso_estado`='Confirmando';";
         String query = "";
         if (asignar)
             query = "UPDATE `Escuela`.`Curso` SET `curso_estado`='Cursando' WHERE `curso_id`='" + id + "';";

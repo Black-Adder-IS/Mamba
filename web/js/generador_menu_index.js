@@ -29,7 +29,7 @@ $( document ).ready(function() {
           if(localStorage.tipo === "estudiante"){
             menu.append('<li><a class="button alert tiny menu_button" href="'+f_index+'estudianteConf.html">Cuenta</a></li>');
           }
-          menu.append('<li><a class="button alert tiny menu_button" id="cerrar_sesion_btn" href="#">Salir</a></li>');
+          menu.append('<li><a class="button alert tiny menu_button" id="cerrar_sesion_btn" href="index.html">Salir</a></li>');
         }
         
         

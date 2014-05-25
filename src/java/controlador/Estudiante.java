@@ -8,16 +8,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import modelo.EstudianteBD;
 import modelo.CursoBD;
+import modelo.EstudianteBD;
 
 /**
  *
@@ -93,6 +93,17 @@ public class Estudiante extends HttpServlet {
 
             if (new EstudianteBD().crear_estudiante(nombre, correo, contrasenia)) {
                 out.println(CONFIRMACION_REGISTRO);
+                Date date = new Date();
+                DateFormat hora = new SimpleDateFormat("HH:mm:ss");
+                DateFormat fecha = new SimpleDateFormat("dd/MM/yyyy");
+                Correo enviar_correo = new Correo();
+                enviar_correo.cuerpo_Correo(correo, "Registro Escuela Inglés", "Tu cuenta ha sido creada en \"Elementors\"\n"
+                        + "Tus datos son:\n"
+                        + "Nombre: " + nombre
+                        + "\nContraseña: " + contrasenia
+                        + "\nHora de registro: " + hora.format(date)
+                        + "\nFecha de registro: " + fecha.format(date));
+                enviar_correo.enviar_Correo();
             } else {
                out.println(RECHAZO_REGISTRO);
             }

@@ -96,9 +96,16 @@ public class EstudianteBD extends ConexionBD{
         if (!contrasenia.equals("")) {
             query += " `estudiante_contrasena`='" + contrasenia + "',";
         }
-        int temp = query.length()-1;
-        if (query.charAt(temp) == ',') {
+        
+        if (query.length() != 0) {
+            query = "UPDATE `Escuela`.`Estudiante` SET" + query;
+            int temp = query.length()-1;
+            if (query.charAt(temp) == ',') {
                 query = query.substring(0, temp);
+            }
+            query += " WHERE `estudiante_correo`='" + correoA + "';";
+        } else {
+            return ex;
         }
         query += " WHERE `estudiante_correo`='" + correoA + "';";
         try {

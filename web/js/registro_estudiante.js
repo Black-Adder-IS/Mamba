@@ -15,13 +15,10 @@ $(document).ready(function() {
             }, function(respuesta) {
                 $('.alerta').remove();
                 if (parseInt(respuesta) === 0) {                
-                    //$('#mensaje').text("Registro exitoso");
                     $('#registroAlumnoModal').append(' <div id="solicitar_alert" data-alert class="alert-box alerta">Registro exitoso</div>');
                 } else if (parseInt(respuesta) === 1) {                
-                    //$('#mensaje').text("Ya existe ese correo. Intente con otro.");                
                     $('#registroAlumnoModal').append(' <div id="solicitar_alert" data-alert class="alert-box warning alerta">Ya existe ese correo. Intente con otro.</div>');
                 } else {                
-                    //$('#mensaje').text("Hubo un fallo en el registro");
                     $('#registroAlumnoModal').append(' <div id="solicitar_alert" data-alert class="alert-box warning alerta">Hubo un fallo en el registro.</div>');
                 }
             });

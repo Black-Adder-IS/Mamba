@@ -10,6 +10,9 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -46,8 +49,7 @@ public class Profesor extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String operacion = request.getParameter("operacion");
-        
+        String operacion = request.getParameter("operacion");  
 
         if (operacion == null) {
             int tipo;
@@ -137,163 +139,181 @@ public class Profesor extends HttpServlet {
             }
             return;
         } else {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        if (operacion.equals("registrar_Profesor")) {
-            String user = request.getParameter("nombre_Profesor");
-            String correo = request.getParameter("correo_Profesor");
-            String contrasenia = request.getParameter("contrasenia_Profesor");
-            String url_constancia = "data/constancias/" + correo + ".pdf";
-            String url_video = "data/videos/" + correo + ".mp4";
-            
-            if(new ProfesorBD().crear_profesor(user, correo, contrasenia, url_constancia, url_video)) {
-                out.println(CONFIRMACION_REGISTRO);
-            } else {
-                out.print(RECHAZO_REGISTRO);
-            }
-            
-        } else if (operacion.equals("editar_Profesor")) {
-            String correoA = request.getParameter("correo_Profesor");
-            String nombre = request.getParameter("nuevo_nombre_Profesor");
-            String correo = request.getParameter("nuevo_correo_Profesor");
-            String contrasenia = request.getParameter("nuevo_contrasenia_Profesor");
-            String url_constancia = "data/constancias/" + correo + ".pdf";
-            String url_video = "data/videos/" + correo + ".mp4";
-            
-            if (new ProfesorBD().editar_profesor(correoA, nombre, correo, contrasenia, url_video, url_constancia) == 1) {
-                out.println(CONFIRMACION_EDICION);
-            } else {
-                out.println(RECHAZO_EDICION);
-            }
-            
-        } else if (operacion.equals("eliminar_Profesor")) {
-            String correo = request.getParameter("correo_Profesor");
-            if (new ProfesorBD().eliminar_profesor(correo) == 1) {
-                out.println(CONFIRMACION_BORRADO);
-            } else {
-                out.println(RECHAZO_BORRADO);
-            }
+            response.setContentType("text/html;charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            if (operacion.equals("registrar_Profesor")) {
+                String nombre = request.getParameter("nombre_Profesor");
+                String correo = request.getParameter("correo_Profesor");
+                String contrasenia = request.getParameter("contrasenia_Profesor");
 
-        } else if (operacion.equals("obtener_Notificaciones_Pendientes")) {
-            String correo = request.getParameter("correo_Profesor");
-            ResultSet rs = new CursoBD().consulta("SELECT ALL `curso_id`, `estudiante_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
-                                                  "FROM `Escuela`.`Curso` WHERE `curso_estado`='Confirmando' AND `profesor_correo`='" + correo +"';");
-            try {
-                while (rs.next()) {
-                    Object [] fila = new Object[5];
-
-                    for (int i = 1; i <= 5; i++)
-                        fila[i-1] = rs.getObject(i);
-                    
-                    ResultSet r = new CursoBD().consulta("SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
-                                                         fila[1].toString() + "';");
-                    r.next();
-                    Object nombre_Estudiante = r.getObject(1);
-            
-                    out.println("<tr>");
-                    out.println("<td>" + nombre_Estudiante + "</td>");
-                    out.println("<td>" + fila[2] + "</td>");
-                    out.println("<td>" + fila[3].toString().substring(0, 5) + " - " + fila[4].toString().substring(0, 5) + "</td>");
-                    out.println("<td><a href=\"#\" data-dropdown=\"drop_1\" class=\"button dropdown tiny\">Acción</a><br>");
-                    out.println("<ul id=\"drop_1\" data-dropdown-content class=\"f-dropdown\">");
-                    out.println("<li><a href=\"#\" onclick=\"asignar_curso(" + fila[0] + ", true )\">Aceptar</a></li>");
-                    out.println("<li><a href=\"#\" onclick=\"asignar_curso(" + fila[0] + ", false )\">Rechazar</a></li>");
-                    out.println("</ul></td>");
-                    out.println("</tr>");
+                if(new ProfesorBD().crear_profesor(nombre, correo, contrasenia)) {
+                    out.println(CONFIRMACION_REGISTRO);
+                    Date date = new Date();
+                    DateFormat hora = new SimpleDateFormat("HH:mm:ss");
+                    DateFormat fecha = new SimpleDateFormat("dd/MM/yyyy");
+                    Correo enviar_correo = new Correo();
+                    enviar_correo.cuerpo_Correo(correo, "Registro Escuela Inglés", "Tu cuenta ha sido creada en \"Elementors\"\n"
+                            + "Tus datos son:\n"
+                            + "Nombre: " + nombre
+                            + "\nContraseña: " + contrasenia
+                            + "\nHora de registro: " + hora.format(date)
+                            + "\nFecha de registro: " + fecha.format(date));
+                    enviar_correo.enviar_Correo();
+                } else {
+                    out.print(RECHAZO_REGISTRO);
                 }
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
 
-        } else if (operacion.equals("obtener_Cursos_Espera")) {
-            String correo = request.getParameter("correo_Profesor");
-            ResultSet rs = new CursoBD().consulta("SELECT ALL `curso_id`, `curso_tipo`, `curso_inicio`, `curso_final`" +
-                                                  "FROM `Escuela`.`Curso` WHERE `curso_estado`='Espera' AND `profesor_correo`='" + correo + "';");
-            try {
-                while (rs.next()) {
-                    Object [] fila = new Object[4];
+            } else if (operacion.equals("editar_Profesor")) {
+                String correoA = request.getParameter("correo_Profesor");
+                String nombre = request.getParameter("nuevo_nombre_Profesor");
+                String correo = request.getParameter("nuevo_correo_Profesor");
+                String contrasenia = request.getParameter("nuevo_contrasenia_Profesor");
+                String url_constancia = "data/constancias/" + correo + ".pdf";
+                String url_video = "data/videos/" + correo + ".mp4";
 
-                    for (int i = 1; i <= 4; i++)
-                        fila[i-1] = rs.getObject(i);
-            
-                    out.println("<tr>");
-                    out.println("<td>" + fila[1] + "</td>");
-                    out.println("<td>" + fila[2].toString().substring(0, 5) + " - " + fila[3].toString().substring(0, 5) + "</td>");
-                    out.println("<td><a href=\"#\" class=\"button tiny alert\" onclick=\"eliminar_curso(" + fila[0] + ")\">Eliminar</a></td>");
-                    out.println("</tr>");
+                String cuerpo_Correo = "";
+                
+                if (new ProfesorBD().editar_profesor(correoA, nombre, correo, contrasenia, url_video, url_constancia) == 1) {
+                    out.println(CONFIRMACION_EDICION);
+                    Date date = new Date();
+                    DateFormat hora = new SimpleDateFormat("HH:mm:ss");
+                    DateFormat fecha = new SimpleDateFormat("dd/MM/yyyy");
+                    String correo_E;
+                    Correo enviar_correo = new Correo();
+                    if (!nombre.equals(""))
+                        cuerpo_Correo += "\nNombre: " + nombre;
+                    if (!correo.equals("")) {
+                        cuerpo_Correo += "\nCorreo: " + correo;
+                        correo_E = correo;
+                    } else {
+                        correo_E = correoA;
+                    }
+                    if (!contrasenia.equals(""))
+                        cuerpo_Correo += "\nContraseña: " + contrasenia;
+                    enviar_correo.cuerpo_Correo(correo_E, "Modificación Datos Escuela Inglés", "Tu cuenta ha sido modificada en \"Elementors\"\n"
+                            + "Los datos modificados son:" + cuerpo_Correo
+                            + "\nHora de registro: " + hora.format(date)
+                            + "\nFecha de registro: " + fecha.format(date));
+                enviar_correo.enviar_Correo();
+                } else {
+                    out.println(RECHAZO_EDICION);
                 }
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
- 
-        } else if (operacion.equals("obtener_Cursos_Actuales")) {
-            String correo = request.getParameter("correo_Profesor");
-            ResultSet rs = new CursoBD().consulta("SELECT ALL `curso_id`, `estudiante_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
-                                                  "FROM `Escuela`.`Curso` WHERE `curso_estado`='Cursando' AND `profesor_correo`='" + correo + "';");
-            try {
-                while (rs.next()) {
-                    Object [] fila = new Object[5];
 
-                    for (int i = 1; i <= 5; i++)
-                        fila[i-1] = rs.getObject(i);
-
-                    ResultSet r = new CursoBD().consulta("SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
-                                                         fila[1].toString() + "';");
-                    r.next();
-                    Object nombre_Estudiante = r.getObject(1);
-                    
-                    out.println("<tr>");
-                    out.println("<td>" + nombre_Estudiante + "</td>");
-                    out.println("<td>" + fila[2] + "</td>");
-                    out.println("<td>" + fila[3].toString().substring(0, 5) + " - " + fila[4].toString().substring(0, 5) + "</td>");
-                    out.println("<td>");
-                    out.println("<a href=\"#\" class=\"button tiny\" onclick=\"calificar_curso(" + fila[0] + ")\">Calificar</a>");
-                    out.println("</td></tr>");
-
+            } else if (operacion.equals("eliminar_Profesor")) {
+                String correo = request.getParameter("correo_Profesor");
+                if (new ProfesorBD().eliminar_profesor(correo) == 1) {
+                    out.println(CONFIRMACION_BORRADO);
+                } else {
+                    out.println(RECHAZO_BORRADO);
                 }
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        } else if (operacion.equals("obtener_Cursos_Finalizados")) {
-            String correo = request.getParameter("correo_Profesor");
-            ResultSet rs = new CursoBD().consulta("SELECT ALL `estudiante_correo`, `curso_tipo`, `curso_calificacion`" +
-                                                  "FROM `Escuela`.`Curso` WHERE `curso_estado`='Terminado' AND `profesor_correo`='" + correo + "';");
-            try {
-                while (rs.next()) {
-                    Object [] fila = new Object[3];
 
-                    for (int i = 1; i <= 3; i++)
-                        fila[i-1] = rs.getObject(i);
+            } else if (operacion.equals("obtener_Notificaciones_Pendientes")) {
+                String correo = request.getParameter("correo_Profesor");
+                ResultSet rs = new CursoBD().consulta("SELECT ALL `curso_id`, `estudiante_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
+                                                      "FROM `Escuela`.`Curso` WHERE `curso_estado`='Confirmando' AND `profesor_correo`='" + correo +"';");
+                try {
+                    while (rs.next()) {
+                        Object [] fila = new Object[5];
 
-                    ResultSet r = new CursoBD().consulta("SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
-                                                         fila[0].toString() + "';");
-                    r.next();
-                    Object nombre_Estudiante = r.getObject(1);
-            
-                    out.println("<tr>");
-                    out.println("<td>" + nombre_Estudiante + "</td>");
-                    out.println("<td>" + fila[1] + "</td>");
-                    out.println("<td>" + fila[2] + "</td>");
-                    out.println("</tr>");
+                        for (int i = 1; i <= 5; i++)
+                            fila[i-1] = rs.getObject(i);
+
+                        ResultSet r = new CursoBD().consulta("SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
+                                                             fila[1].toString() + "';");
+                        r.next();
+                        Object nombre_Estudiante = r.getObject(1);
+
+                        out.println("<tr>");
+                        out.println("<td>" + nombre_Estudiante + "</td>");
+                        out.println("<td>" + fila[2] + "</td>");
+                        out.println("<td>" + fila[3].toString().substring(0, 5) + " - " + fila[4].toString().substring(0, 5) + "</td>");
+                        out.println("<td><a href=\"#\" data-dropdown=\"drop_2\" class=\"button dropdown tiny\">Acción</a><br>");
+                        out.println("<ul id=\"drop_2\" data-dropdown-content class=\"f-dropdown\">");
+                        out.println("<li><a href=\"#\" onclick=\"asignar_curso(" + fila[0] + ", true )\" >Aceptar</a></li>");
+                        out.println("<li><a href=\"#\" onclick=\"asignar_curso(" + fila[0] + ", false )\" >Rechazar</a></li>");
+                        out.println("</ul></td></tr>");
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace();
                 }
-            } catch(Exception e) {
-                e.printStackTrace();
+
+            } else if (operacion.equals("obtener_Cursos_Espera")) {
+                String correo = request.getParameter("correo_Profesor");
+                ResultSet rs = new CursoBD().consulta("SELECT ALL `curso_id`, `curso_tipo`, `curso_inicio`, `curso_final`" +
+                                                      "FROM `Escuela`.`Curso` WHERE `curso_estado`='Espera' AND `profesor_correo`='" + correo + "';");
+                try {
+                    while (rs.next()) {
+                        Object [] fila = new Object[4];
+
+                        for (int i = 1; i <= 4; i++)
+                            fila[i-1] = rs.getObject(i);
+
+                        out.println("<tr>");
+                        out.println("<td>" + fila[1] + "</td>");
+                        out.println("<td>" + fila[2].toString().substring(0, 5) + " - " + fila[3].toString().substring(0, 5) + "</td>");
+                        out.println("<td><a href=\"#\" class=\"button tiny alert\" onclick=\"eliminar_curso(" + fila[0] + ")\">Eliminar</a></td>");
+                        out.println("</tr>");
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+
+            } else if (operacion.equals("obtener_Cursos_Actuales")) {
+                String correo = request.getParameter("correo_Profesor");
+                ResultSet rs = new CursoBD().consulta("SELECT ALL `curso_id`, `estudiante_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
+                                                      "FROM `Escuela`.`Curso` WHERE `curso_estado`='Cursando' AND `profesor_correo`='" + correo + "';");
+                try {
+                    while (rs.next()) {
+                        Object [] fila = new Object[5];
+
+                        for (int i = 1; i <= 5; i++)
+                            fila[i-1] = rs.getObject(i);
+
+                        ResultSet r = new CursoBD().consulta("SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
+                                                             fila[1].toString() + "';");
+                        r.next();
+                        Object nombre_Estudiante = r.getObject(1);
+
+                        out.println("<tr>");
+                        out.println("<td>" + nombre_Estudiante + "</td>");
+                        out.println("<td>" + fila[2] + "</td>");
+                        out.println("<td>" + fila[3].toString().substring(0, 5) + " - " + fila[4].toString().substring(0, 5) + "</td>");
+                        out.println("<td>");
+                        out.println("<a href=\"#\" class=\"button tiny\" onclick=\"calificar_curso(" + fila[0] + ")\">Calificar</a>");
+                        out.println("</td></tr>");
+
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (operacion.equals("obtener_Cursos_Finalizados")) {
+                String correo = request.getParameter("correo_Profesor");
+                ResultSet rs = new CursoBD().consulta("SELECT ALL `estudiante_correo`, `curso_tipo`, `curso_calificacion`" +
+                                                      "FROM `Escuela`.`Curso` WHERE `curso_estado`='Terminado' AND `profesor_correo`='" + correo + "';");
+                try {
+                    while (rs.next()) {
+                        Object [] fila = new Object[3];
+
+                        for (int i = 1; i <= 3; i++)
+                            fila[i-1] = rs.getObject(i);
+
+                        ResultSet r = new CursoBD().consulta("SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
+                                                             fila[0].toString() + "';");
+                        r.next();
+                        Object nombre_Estudiante = r.getObject(1);
+
+                        out.println("<tr>");
+                        out.println("<td>" + nombre_Estudiante + "</td>");
+                        out.println("<td>" + fila[1] + "</td>");
+                        out.println("<td>" + fila[2] + "</td>");
+                        out.println("</tr>");
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+
             }
-
-        }}
-
-        //try (PrintWriter out = response.getWriter()) {
-        //    /* TODO output your page here. You may use following sample code. */
-        //    out.println("<!DOCTYPE html>");
-        //    out.println("<html>");
-        //    out.println("<head>");
-        //    out.println("<title>Servlet Profesor</title>");            
-        //    out.println("</head>");
-        //    out.println("<body>");
-        //    out.println("<h1>Servlet Profesor at " + request.getContextPath() + "</h1>");
-        //    out.println("</body>");
-        //    out.println("</html>");
-        //}
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

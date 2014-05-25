@@ -57,29 +57,33 @@ $(document).ready(function() {
         var nombreVar = $('#nombre_Profesor').val();
         var correoVar1 = $('#correo_Profesor').val();
         var contraseniaVar = $('#contrasenia_Profesor').val();
-        $.post('Profesor?operacion=editar_Profesor', {
-            correo_Profesor : correoVar,
-            nuevo_nombre_Profesor : nombreVar,
-            nuevo_correo_Profesor : correoVar1,
-            nuevo_contrasenia_Profesor : contraseniaVar
-        }, function (respuesta) {
-            var confirmacion = parseInt(respuesta);
-            if (confirmacion === 2) {
+        if (nombreVar == "" && correoVar1 == "" && contraseniaVar == "") {
+            
+        } else {
+            $.post('Profesor?operacion=editar_Profesor', {
+                correo_Profesor : correoVar,
+                nuevo_nombre_Profesor : nombreVar,
+                nuevo_correo_Profesor : correoVar1,
+                nuevo_contrasenia_Profesor : contraseniaVar
+            }, function (respuesta) {
+                var confirmacion = parseInt(respuesta);
+                if (confirmacion === 2) {
 
-                if (correoVar1.trim() == "") {
-                    
+                    if (correoVar1.trim() == "") {
+
+                    } else {
+                        localStorage.setItem("id", correoVar1);
+                    }
+                    localStorage.setItem('mensaje', 'Datos modificados');
+
+                } else if (confirmacion === 3) {
+                    localStorage.setItem('mensaje_error', 'No se pueden modificar los datos, intenta con otro correo');
                 } else {
-                    localStorage.setItem("id", correoVar1);
-                    location.href = "profesorConf.html";
+                    localStorage.setItem('mensaje_error', 'Hubo un problema al editar la información. Intentalo de nuevo.');
                 }
-                $('#mensaje').text("Datos modificados");
-                
-            } else if (confirmacion === 3) {
-                $('#mensaje').text("No se pueden modificar los datos, intenta con otro correo");
-            } else {
-                $('#mensaje').text("Hubo un problema al editar la información. Intentalo de nuevo.");
-            }
-        });
+                location.href = "profesorConf.html";
+            });
+        }
     });
                     
     $('#borrar').click(function(event) {
@@ -91,12 +95,13 @@ $(document).ready(function() {
             if (confirmacion === 4) {
                 localStorage.removeItem("id");
                 localStorage.removeItem("tipo");
-                $('#mensaje').text("Lo sentimos, esperamos que regreses.");
+                
+                localStorage.setItem('mensaje', 'Lo sentimos, esperamos que regreses.');
                 location.href="index.html";
             } else if(confirmacion === 5) {
-                $('#mensaje').text("No se ha podido borrar la cuenta");
+                localStorage.setItem('mensaje_error', "No se ha podido borrar la cuenta");
             } else {
-                $('#mensaje').text("Hubo un problema al borrar la cuenta. Intentalo después.");
+                localStorage.setItem('mensaje_error', "Hubo un problema al borrar la cuenta. Intentalo después.");
             }
         });
     });
@@ -117,14 +122,15 @@ var crear_curso = function() {
             tipo_Curso : tipo_curso
         }, function(respuesta) {          
             if (parseInt(respuesta) === -1) {                
-                $('#mensaje').text("La hora final del curso es menor o igual a la hora inicial");                
+                localStorage.setItem('mensaje_error',"La hora final del curso es menor o igual a la hora inicial");                
             } else if (parseInt(respuesta) === 0) {                
-                $('#mensaje').text("Se ha creado el curso");                
+                localStorage.setItem('mensaje', "Se ha creado el curso");                
             } else if (parseInt(respuesta) === 1) {                
-                $('#mensaje').text("No se puede crear el curso, ya está dando un curso a esa hora");                
+                localStorage.setItem('mensaje_error', "No se puede crear el curso, ya está dando un curso a esa hora");                
             } else {                
-                $('#mensaje').text("Hubo un fallo al intentar crear el curso");
+                localStorage.setItem('mensaje_error', "Hubo un fallo al intentar crear el curso");
             }
+            location.href="profesorConf.html";
         });
 };
 
@@ -147,26 +153,39 @@ var calificar_curso = function(id_Curso) {
             nota : nota_curso
         }, function(respuesta) {          
             if (parseInt(respuesta) === 2) {                
-                $('#mensaje').text("Curso calificado");
-                location.href = "profesorConf.html";
+                localStorage.setItem('mensaje', "Curso calificado");
             } else if (parseInt(respuesta) === 3) {                
-                $('#mensaje').text("No se ha podido calificar el curso");
+                localStorage.setItem('mensaje_error',"No se ha podido calificar el curso");
             }
+            location.href = "profesorConf.html";
         });
     }
 };
 
 
-var asignar_curso = function(id_C, aceptado) {
+var asignar_curso = function(id_curso, aceptado) {
     $.post('Curso?operacion=asignar_Curso', {
-            id_Curso : id_C,
+            id_Curso : id_curso,
             aceptado_Curso : aceptado
         }, function(respuesta) {          
             if (parseInt(respuesta) === 6) {                
-                $('#mensaje').text("Acción realizada"); 
-                location.href = "profesorConf.html";
+                localStorage.setItem('mensaje', "Acción realizada"); 
             } else if (parseInt(respuesta) === 7) {                
-                $('#mensaje').text("No se ha podido realizar la acción");
+                localStorage.setItem('mensaje_error', "No se ha podido realizar la acción");
             }
+            location.href = "profesorConf.html";
+    });
+};
+
+var eliminar_curso = function(id_curso) {
+    $.post('Curso?operacion=eliminar_Curso', {
+            id_Curso : id_curso,
+        }, function(respuesta) {          
+            if (parseInt(respuesta) === 4) {                
+                localStorage.setItem('mensaje', "Acción realizada"); 
+            } else if (parseInt(respuesta) === 5) {                
+                localStorage.setItem('mensaje_error', "No se ha podido realizar la acción");
+            }
+            location.href = "profesorConf.html";
         });
 };

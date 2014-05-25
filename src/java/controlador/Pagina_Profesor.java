@@ -105,7 +105,7 @@ out.println("  <a class='close-reveal-modal'>&#215;</a>");
 out.println("</div>");
 out.println("  <div id='myModal' class='reveal-modal' data-reveal>");
 out.println("    <h2>Elige el tipo de registro</h2>");
-out.println("    <p class='lead'>Puedes elegir entre maestro y alumno</p>");
+out.println("       <p class='lead'>Puedes elegir entre maestro y alumno</p>");
 out.println("    <div class='panel'>");
 out.println("      <h5>Aprende</h5>");
 out.println("      <p>Selecciona el nivel de curso que quieras tomar con el maestro que te agrade.</p>");

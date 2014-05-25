@@ -15,6 +15,13 @@
         <script src="js/inicio_sesion.js"></script>
         <script src="js/mensajes_alerta.js"></script>
         <script src="js/administrar_cuenta_estudiante.js"></script>
+        <script>
+            var cuerpo = document.getElementById('msg');
+            if (localStorage.mensaje) {
+                cuerpo.appendChild('<div data-alert class="alert-box alerta">' + localStorage.mensaje + '</div>');
+                localStorage.removeItem("mensaje");
+            }
+        </script>
 
     </head>
     <body>
@@ -61,17 +68,9 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th width="40%">
-                                        Profesor
-                                    </th>
-
-                                    <th width="20%">
-                                        Tipo de Curso
-                                    </th>
-
-                                    <th width="20%">
-                                        Horario
-                                    </th>
+                                    <th width="40%">Profesor</th>
+                                    <th width="20%">Tipo de Curso</th>
+                                    <th width="20%">Horario</th>
                                 </tr>
                             </thead>
 

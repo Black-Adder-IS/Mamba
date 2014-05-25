@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 $(document).ready(function() {
-    //localStorage.setItem('mensaje_error', 'Mensaje de prueba1');
     var muestra_mensajes = function() {
         var cuerpo = $('body');
         if (localStorage.mensaje) {

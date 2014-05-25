@@ -27,19 +27,20 @@ $(document).ready(function() {
             nuevo_correo_Estudiante : correoVar1,
             nuevo_contrasenia_Estudiante : contraseniaVar
         }, function (respuesta) {
-            if (parseInt(respuesta) === 2) {                
+            var confirmacion = parseInt(respuesta);
+            if (confirmacion === 2) {                
                 if (correoVar1.trim() == "") {
                     
                 } else {
                     localStorage.setItem("id", correoVar1);
-                    location.href = "estudianteConf.html";
                 }
-                $('#mensaje').text("Datos modificados");
+                localStorage.setItem('mensaje', 'Datos modificados');
             } else if (confirmacion === 3) {
-                $('#mensaje').text("No se pueden modificar los datos, intenta con otro correo");
+                localStorage.setItem('mensaje_error', 'No se pueden modificar los datos, intenta con otro correo');
             } else {
-                $('#mensaje').text("Hubo un problema al editar la información. Intentalo de nuevo.");
+                localStorage.setItem('mensaje_error', 'Hubo un problema al editar la información. Intentalo de nuevo.');
             }
+            location.href = "estudianteConf.html";
         });
     });
                     
@@ -52,13 +53,13 @@ $(document).ready(function() {
             if (confirmacion === 4) {
                 localStorage.removeItem("id");
                 localStorage.removeItem("tipo");
-                $('#mensaje').text("Lo sentimos, esperamos que regreses.");
-                location.href="index.html";
+                localStorage.setItem('mensaje', "Lo sentimos, esperamos que regreses.");
             } else if(confirmacion === 5) {
-                $('#mensaje').text("No se ha podido borrar la cuenta");
+               localStorage.setItem('mensaje_error', "No se ha podido borrar la cuenta");
             } else {
-                $('#mensaje').text("Hubo un problema al borrar la cuenta. Intentalo después.");
+                localStorage.setItem('mensaje', "Hubo un problema al borrar la cuenta. Intentalo después.");
             }
+            location.href="index.html";                            
         });
     });
 });

@@ -24,7 +24,7 @@ public class ConexionBD {
     
     private final String SERVIDOR = "jdbc:mysql://127.0.0.1:3306/Escuela";
     private final String USUARIO = "root";
-    private final String CONTRASENIA = "";
+    private final String CONTRASENIA = "mysql";
     
     
     /**
@@ -35,7 +35,7 @@ public class ConexionBD {
         url = "jdbc:mysql://127.0.0.1:3306/";
         db = "Escuela";
         userName = "root";
-        password = "";
+        password = "mysql";
     }
 
     public Connection getConexion() throws ClassNotFoundException {
@@ -43,7 +43,6 @@ public class ConexionBD {
         try {
             Class.forName(driver);
             cn = DriverManager.getConnection(url+db, userName, password);
-            System.out.println("Todo chido");
             return cn;
         } catch (SQLException ex) {
             System.out.println("error: " + ex);
@@ -74,9 +73,7 @@ public class ConexionBD {
     public ResultSet consulta (Connection conexion, String consulta) {
         ResultSet resultado = null;
         try {
-            // Instrucción SQL para obtener los datos
-            // del usuario indicado :
-            //String query = "select * from Estudiante";
+            
             String query = consulta;
             Statement st = conexion.createStatement();
             resultado = st.executeQuery(query);
