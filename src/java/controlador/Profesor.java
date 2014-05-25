@@ -7,19 +7,20 @@ package controlador;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.ConexionBD;
 import modelo.ProfesorBD;
-import modelo.CursoBD;
 
 /**
  *
@@ -168,8 +169,8 @@ public class Profesor extends HttpServlet {
                 String nombre = request.getParameter("nuevo_nombre_Profesor");
                 String correo = request.getParameter("nuevo_correo_Profesor");
                 String contrasenia = request.getParameter("nuevo_contrasenia_Profesor");
-                String url_constancia = "data/constancias/" + correo + ".pdf";
-                String url_video = "data/videos/" + correo + ".mp4";
+                String url_constancia = "";//data/constancias/" + correo + ".pdf";
+                String url_video = "";//"data/videos/" + correo + ".mp4";*()
 
                 String cuerpo_Correo = "";
                 
@@ -192,8 +193,8 @@ public class Profesor extends HttpServlet {
                         cuerpo_Correo += "\nContraseña: " + contrasenia;
                     enviar_correo.cuerpo_Correo(correo_E, "Modificación Datos Escuela Inglés", "Tu cuenta ha sido modificada en \"Elementors\"\n"
                             + "Los datos modificados son:" + cuerpo_Correo
-                            + "\nHora de registro: " + hora.format(date)
-                            + "\nFecha de registro: " + fecha.format(date));
+                            + "\nHora de modificación: " + hora.format(date)
+                            + "\nFecha de modificación: " + fecha.format(date));
                 enviar_correo.enviar_Correo();
                 } else {
                     out.println(RECHAZO_EDICION);
@@ -209,29 +210,40 @@ public class Profesor extends HttpServlet {
 
             } else if (operacion.equals("obtener_Notificaciones_Pendientes")) {
                 String correo = request.getParameter("correo_Profesor");
-                ResultSet rs = new CursoBD().consulta("SELECT ALL `curso_id`, `estudiante_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
+                ConexionBD conexion_bd = new ConexionBD();
+                Connection conexion = conexion_bd.conectarBD();
+                ResultSet rs = conexion_bd.consulta(conexion, "SELECT ALL `curso_id`, `estudiante_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
                                                       "FROM `Escuela`.`Curso` WHERE `curso_estado`='Confirmando' AND `profesor_correo`='" + correo +"';");
+                
+                ResultSet r;
+                Object nombre_Estudiante;
+                Object [] fila;
+                int j = 0;
                 try {
                     while (rs.next()) {
-                        Object [] fila = new Object[5];
+                        fila = new Object[5];
 
                         for (int i = 1; i <= 5; i++)
                             fila[i-1] = rs.getObject(i);
 
-                        ResultSet r = new CursoBD().consulta("SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
+                        r = conexion_bd.consulta(conexion, "SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
                                                              fila[1].toString() + "';");
                         r.next();
-                        Object nombre_Estudiante = r.getObject(1);
+                        nombre_Estudiante = r.getObject(1);
 
                         out.println("<tr>");
                         out.println("<td>" + nombre_Estudiante + "</td>");
                         out.println("<td>" + fila[2] + "</td>");
                         out.println("<td>" + fila[3].toString().substring(0, 5) + " - " + fila[4].toString().substring(0, 5) + "</td>");
-                        out.println("<td><a href=\"#\" data-dropdown=\"drop_2\" class=\"button dropdown tiny\">Acción</a><br>");
-                        out.println("<ul id=\"drop_2\" data-dropdown-content class=\"f-dropdown\">");
-                        out.println("<li><a href=\"#\" onclick=\"asignar_curso(" + fila[0] + ", true )\" >Aceptar</a></li>");
-                        out.println("<li><a href=\"#\" onclick=\"asignar_curso(" + fila[0] + ", false )\" >Rechazar</a></li>");
-                        out.println("</ul></td></tr>");
+                        out.println("<td>");
+                        out.println("<a href=\"#\" class=\"button dropdown tiny\" data-dropdown=\"drop\">Acción</a>");
+                        out.println("<br>");
+                        out.println("<ul id=\"drop" + (j++) + "\" data-dropdown-content class=\"f-dropdown\">");
+                        out.println("<li><a href=\"#\">Aceptar</a></li>");//onclick=\"asignar_curso(" + fila[0] + ",true)\">Aceptar</a></li>");
+                        //out.println("<li><a href=\"#\" onclick=\"asignar_curso(" + fila[0] + ",false)\">Rechazar</a></li>");
+                        out.println("</ul>");
+                        out.println("</td>");
+                        out.println("</tr>");
                     }
                 } catch(Exception e) {
                     e.printStackTrace();
@@ -239,11 +251,15 @@ public class Profesor extends HttpServlet {
 
             } else if (operacion.equals("obtener_Cursos_Espera")) {
                 String correo = request.getParameter("correo_Profesor");
-                ResultSet rs = new CursoBD().consulta("SELECT ALL `curso_id`, `curso_tipo`, `curso_inicio`, `curso_final`" +
+                ConexionBD conexion_bd = new ConexionBD();
+                Connection conexion = conexion_bd.conectarBD();
+                ResultSet rs = conexion_bd.consulta(conexion, "SELECT ALL `curso_id`, `curso_tipo`, `curso_inicio`, `curso_final`" +
                                                       "FROM `Escuela`.`Curso` WHERE `curso_estado`='Espera' AND `profesor_correo`='" + correo + "';");
+                
+                Object [] fila;
                 try {
                     while (rs.next()) {
-                        Object [] fila = new Object[4];
+                        fila = new Object[4];
 
                         for (int i = 1; i <= 4; i++)
                             fila[i-1] = rs.getObject(i);
@@ -260,8 +276,13 @@ public class Profesor extends HttpServlet {
 
             } else if (operacion.equals("obtener_Cursos_Actuales")) {
                 String correo = request.getParameter("correo_Profesor");
-                ResultSet rs = new CursoBD().consulta("SELECT ALL `curso_id`, `estudiante_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
+                ConexionBD conexion_bd = new ConexionBD();
+                Connection conexion = conexion_bd.conectarBD();
+                ResultSet rs = conexion_bd.consulta(conexion, "SELECT ALL `curso_id`, `estudiante_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
                                                       "FROM `Escuela`.`Curso` WHERE `curso_estado`='Cursando' AND `profesor_correo`='" + correo + "';");
+                
+                ResultSet r;
+                Object nombre_Estudiante;
                 try {
                     while (rs.next()) {
                         Object [] fila = new Object[5];
@@ -269,10 +290,10 @@ public class Profesor extends HttpServlet {
                         for (int i = 1; i <= 5; i++)
                             fila[i-1] = rs.getObject(i);
 
-                        ResultSet r = new CursoBD().consulta("SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
+                        r = conexion_bd.consulta(conexion, "SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
                                                              fila[1].toString() + "';");
                         r.next();
-                        Object nombre_Estudiante = r.getObject(1);
+                        nombre_Estudiante = r.getObject(1);
 
                         out.println("<tr>");
                         out.println("<td>" + nombre_Estudiante + "</td>");
@@ -288,8 +309,13 @@ public class Profesor extends HttpServlet {
                 }
             } else if (operacion.equals("obtener_Cursos_Finalizados")) {
                 String correo = request.getParameter("correo_Profesor");
-                ResultSet rs = new CursoBD().consulta("SELECT ALL `estudiante_correo`, `curso_tipo`, `curso_calificacion`" +
+                ConexionBD conexion_bd = new ConexionBD();
+                Connection conexion = conexion_bd.conectarBD();
+                ResultSet rs = conexion_bd.consulta(conexion, "SELECT ALL `estudiante_correo`, `curso_tipo`, `curso_calificacion`" +
                                                       "FROM `Escuela`.`Curso` WHERE `curso_estado`='Terminado' AND `profesor_correo`='" + correo + "';");
+                
+                ResultSet r;
+                Object nombre_Estudiante;
                 try {
                     while (rs.next()) {
                         Object [] fila = new Object[3];
@@ -297,10 +323,10 @@ public class Profesor extends HttpServlet {
                         for (int i = 1; i <= 3; i++)
                             fila[i-1] = rs.getObject(i);
 
-                        ResultSet r = new CursoBD().consulta("SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
+                        r = conexion_bd.consulta(conexion, "SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
                                                              fila[0].toString() + "';");
                         r.next();
-                        Object nombre_Estudiante = r.getObject(1);
+                        nombre_Estudiante = r.getObject(1);
 
                         out.println("<tr>");
                         out.println("<td>" + nombre_Estudiante + "</td>");

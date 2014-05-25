@@ -38,13 +38,16 @@ public class ConexionBD {
         password = "mysql";
     }
 
-    public Connection getConexion() throws ClassNotFoundException {
+    public Connection getConexion() {
         Connection cn;
         try {
             Class.forName(driver);
             cn = DriverManager.getConnection(url+db, userName, password);
             return cn;
         } catch (SQLException ex) {
+            System.out.println("error: " + ex);
+            return null;
+        } catch (ClassNotFoundException ex) {
             System.out.println("error: " + ex);
             return null;
         }

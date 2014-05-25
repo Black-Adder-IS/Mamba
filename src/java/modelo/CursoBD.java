@@ -44,11 +44,7 @@ public class CursoBD extends ConexionBD{
         consulta += ";";
         System.out.println(consulta);
         Connection conexion;
-        try {
-            conexion = getConexion();
-        } catch (ClassNotFoundException ex) {
-            throw new SQLException();
-        }
+        conexion = getConexion();
         ResultSet resultado =  consulta(conexion, consulta);
         if (resultado == null) {
             return -1;
@@ -81,11 +77,7 @@ public class CursoBD extends ConexionBD{
         consulta += "LIMIT " + pagina * cantidad + ", " + (pagina + 1) * cantidad +";";
         System.out.println(consulta);
         Connection conexion;
-        try {
-            conexion = getConexion();
-        } catch (ClassNotFoundException ex) {
-            throw new SQLException();
-        }
+        conexion = getConexion();
         ResultSet resultado =  consulta(conexion, consulta);
         if (resultado == null) {
             return null;
@@ -117,11 +109,7 @@ public class CursoBD extends ConexionBD{
                 "  FROM `Escuela`.`Curso` WHERE curso_estado = \"Espera\" AND profesor_correo = \"" + correo + "\";";
         System.out.println(consulta);
         Connection conexion;
-        try {
-            conexion = getConexion();
-        } catch (ClassNotFoundException ex) {
-            throw new SQLException();
-        }
+        conexion = getConexion();
         ResultSet resultado =  consulta(conexion, consulta);
         if (resultado == null) {
             return null;
@@ -151,17 +139,14 @@ public class CursoBD extends ConexionBD{
                 "WHERE curso_id = " + curso_id + ";";
         System.out.println(consulta);
         Connection conexion;
-        try {
-            conexion = getConexion();
-        } catch (ClassNotFoundException ex) {
-            throw new SQLException();
-        }
+        conexion = getConexion();
         int resultado =  actualiza(conexion, consulta);
         return resultado != 0;
     }
     
     public boolean crear_curso(String correo, String tinicio, String tfinal, String tipo) {
-        String consulta_1 = "SELECT * FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + correo + "' AND `profesor_url_certificado` IS NULL OR `profesor_url_video` IS NULL";
+        System.out.println(correo);
+        String consulta_1 = "SELECT * FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + correo + "' AND (`profesor_url_certificado` IS NULL OR `profesor_url_video` IS NULL)";
         String consulta_2 = "SELECT * FROM `Escuela`.`Curso` WHERE `profesor_correo`='" + correo  +"' AND `curso_inicio`='" + tinicio + "' AND (`curso_estado`='Cursando' OR `curso_tipo`='" + tipo + "');";
 
         String query = "INSERT INTO `Escuela`.`Curso` (`profesor_correo`, `estudiante_correo`, `curso_inicio`, `curso_final`, `curso_tipo`, "
@@ -172,7 +157,7 @@ public class CursoBD extends ConexionBD{
         Connection conexion = super.conectarBD();
         ResultSet resultado_1 = super.consultar(conexion, consulta_1);
         ResultSet resultado_2 = super.consultar(conexion, consulta_2);
-            
+        
         if (resultado_1 == null || resultado_2 == null) {
             return false;
         }
@@ -269,11 +254,4 @@ public class CursoBD extends ConexionBD{
         super.desconectarBD(conexion);
         return true;
     }
-    
-    public ResultSet consulta(String query) {
-        Connection conexion = super.conectarBD();
-        ResultSet rs = super.consultar(conexion, query);
-        return rs;
-    }
-    
 }

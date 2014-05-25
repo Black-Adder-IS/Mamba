@@ -36,11 +36,7 @@ public class ProfesorBD extends ConexionBD{
         boolean encontrado;
         String consulta = "select * from Profesor where profesor_correo = '" + id + "' AND profesor_contrasena = '" + contrasena +"';";
         Connection conexion;
-        try {
-            conexion = getConexion();
-        } catch (ClassNotFoundException ex) {
-            throw new SQLException();
-        }
+        conexion = getConexion();
         ResultSet resultado =  consulta(conexion, consulta);
         if (resultado == null) {
             return false;
@@ -68,11 +64,7 @@ public class ProfesorBD extends ConexionBD{
         consulta += "GROUP BY profesor_id) AS foo; ";
         System.out.println(consulta);
         Connection conexion;
-        try {
-            conexion = getConexion();
-        } catch (ClassNotFoundException ex) {
-            throw new SQLException();
-        }
+        conexion = getConexion();
         ResultSet resultado =  consulta(conexion, consulta);
         if (resultado == null) {
             return -1;
@@ -105,11 +97,7 @@ public class ProfesorBD extends ConexionBD{
         consulta += "LIMIT " + pagina * cantidad + ", " + (pagina + 1) * cantidad +";";
         System.out.println(consulta);
         Connection conexion;
-        try {
-            conexion = getConexion();
-        } catch (ClassNotFoundException ex) {
-            throw new SQLException();
-        }
+        conexion = getConexion();
         ResultSet resultado =  consulta(conexion, consulta);
         if (resultado == null) {
             return null;
@@ -140,11 +128,7 @@ public class ProfesorBD extends ConexionBD{
         "FROM Profesor WHERE profesor_id = " + id +";";
         System.out.println(consulta);
         Connection conexion;
-        try {
-            conexion = getConexion();
-        } catch (ClassNotFoundException ex) {
-            throw new SQLException();
-        }
+        conexion = getConexion();
         ResultSet resultado =  consulta(conexion, consulta);
         if (resultado == null || !resultado.next()) {
             return null;

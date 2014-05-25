@@ -7,13 +7,19 @@ package controlador;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.ConexionBD;
 import modelo.CursoBD;
 
 /**
@@ -24,7 +30,7 @@ import modelo.CursoBD;
 @WebServlet(name = "Curso", urlPatterns = {"/Curso"})
 public class Curso extends HttpServlet {
     
-    private final String VALIACION_TIEMPO = "-1";
+    private final String VALIDACION_TIEMPO = "-1";
     private final String CONFIRMACION_CREACION = "0";
     private final String RECHAZO_CREACION = "1";
     private final String CONFIRMACION_CALIFICACION = "2";
@@ -134,7 +140,7 @@ public class Curso extends HttpServlet {
             String tipo = request.getParameter("tipo_Curso");
             
             if (tinicio.compareTo(tfinal) >= 0) {
-                out.println(VALIACION_TIEMPO);
+                out.println(VALIDACION_TIEMPO);
             } else {
             
                 if (new CursoBD().crear_curso(correo, tinicio, tfinal, tipo)) {
@@ -153,6 +159,50 @@ public class Curso extends HttpServlet {
             
             if (new CursoBD().asignar_curso(id, asignado)) {
                 out.println(CONFIRMACION_ASIGNADO);
+                if (asignado) {
+                    Date date = new Date();
+                    DateFormat hora = new SimpleDateFormat("HH:mm:ss");
+                    DateFormat fecha = new SimpleDateFormat("dd/MM/yyyy");
+                    Correo enviar_correo = new Correo();
+                    ConexionBD conexion_bd = new ConexionBD();
+                    Connection conexion = conexion_bd.conectarBD();
+                    ResultSet rs = conexion_bd.consulta(conexion, "SELECT `estudiante_correo`, `profesor_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
+                                                          "FROM `Escuela`.`Curso` WHERE `curso_estado`='Confirmando' AND `curso_id`='" + id +"';");
+
+                    ResultSet r;
+                    String nombre_Estudiante = "";
+                    String nombre_Profesor = "";
+                    Object [] fila = null;
+                    try {
+                        rs.next();
+                        fila = new Object[5];
+
+                        for (int i = 1; i <= 5; i++)
+                            fila[i-1] = rs.getObject(i);
+
+                        r = conexion_bd.consulta(conexion, "SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
+                                                                 fila[0].toString() + "';");
+                        r.next();
+                        nombre_Estudiante = r.getObject(1).toString();
+
+                        r = conexion_bd.consulta(conexion, "SELECT `profesor_nombre` FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + 
+                                                                 fila[1].toString() + "';");
+                        r.next();
+                        nombre_Profesor = r.getObject(1).toString();
+
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    enviar_correo.cuerpo_Correo(fila[0].toString(), "Fuiste aceptado al curoso del Profesor " + nombre_Profesor, "Estimado " + nombre_Estudiante
+                            + ", por este medio te informamos que el Profesor " + nombre_Profesor + "(" + fila[1].toString() + ")"
+                            + " ha aceptado tu solicitud del curso de"
+                            + "tipo " + fila[2].toString() + " con horario" + fila[3].toString().substring(0, 5) + " - " + fila[4].toString().substring(0, 5)
+                            + ".\n\n\n"
+                            + "Hora de envío: " + hora.format(date)
+                            + "Fecha de envío: " + fecha.format(date));
+                    enviar_correo.enviar_Correo();
+                }
             } else {
                 out.println(RECHAZO_ASIGNADO);
             }

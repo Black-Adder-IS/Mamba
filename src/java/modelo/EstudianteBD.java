@@ -32,11 +32,7 @@ public class EstudianteBD extends ConexionBD{
         String consulta = "select * from Estudiante where estudiante_correo = '" + id + "' AND estudiante_contrasena = '" + contrasena +"';";
         System.out.println(consulta);
         Connection conexion;
-        try {
-            conexion = getConexion();
-        } catch (ClassNotFoundException ex) {
-            throw new SQLException();
-        }
+        conexion = getConexion();
         ResultSet resultado =  consulta(conexion, consulta);
         if (resultado == null) {
             return false;

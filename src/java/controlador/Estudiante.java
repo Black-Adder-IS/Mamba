@@ -6,6 +6,7 @@ package controlador;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -16,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.ConexionBD;
 import modelo.CursoBD;
 import modelo.EstudianteBD;
 
@@ -130,20 +132,27 @@ public class Estudiante extends HttpServlet {
 
         } else if (operacion.equals("obtener_Cursos_Actuales")) {
             String correo = request.getParameter("correo_Estudiante");
-            ResultSet rs = new CursoBD().consulta("SELECT ALL `profesor_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
+            ConexionBD conexion_bd = new ConexionBD();
+            Connection conexion = conexion_bd.conectarBD();
+            ResultSet rs = conexion_bd.consulta(conexion, "SELECT ALL `profesor_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
                                                   "FROM `Escuela`.`Curso` WHERE `curso_estado`='Cursando' AND `estudiante_correo`='" + correo + "';");
+            
+            ResultSet r;
+            Object [] fila;
+            Object nombre_Profesor;
+            Object url_Pagina;
             try {
                 while (rs.next()) {
-                    Object [] fila = new Object[4];
+                    fila = new Object[4];
 
                     for (int i = 1; i <= 4; i++)
                         fila[i-1] = rs.getObject(i);
 
-                    ResultSet r = new CursoBD().consulta("SELECT `profesor_nombre`, `profesor_id` FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + 
+                    r = conexion_bd.consulta(conexion, "SELECT `profesor_nombre`, `profesor_id` FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + 
                                                          fila[0].toString() + "';");
                     r.next();
-                    Object nombre_Profesor = r.getObject(1);
-                    Object url_Pagina = r.getObject(2);
+                    nombre_Profesor = r.getObject(1);
+                    url_Pagina = r.getObject(2);
                     
                     out.println("<tr>");
                     out.println("<td><a href=\"profesor?id=" + url_Pagina + "\">" + nombre_Profesor + "</a></td>");
@@ -157,20 +166,27 @@ public class Estudiante extends HttpServlet {
 
         } else if (operacion.equals("obtener_Cursos_Finalizados")) {
             String correo = request.getParameter("correo_Estudiante");
-            ResultSet rs = new CursoBD().consulta("SELECT ALL `profesor_correo`, `curso_tipo`, `curso_calificacion`, `curso_nota`" +
+            ConexionBD conexion_bd = new ConexionBD();
+            Connection conexion = conexion_bd.conectarBD();
+            ResultSet rs = conexion_bd.consulta(conexion, "SELECT ALL `profesor_correo`, `curso_tipo`, `curso_calificacion`, `curso_nota`" +
                                                   "FROM `Escuela`.`Curso` WHERE `curso_estado`='Terminado' AND `estudiante_correo`='" + correo + "';");
+            
+            ResultSet r;
+            Object [] fila;
+            Object nombre_Profesor;
+            Object url_Pagina;
             try {
                 while (rs.next()) {
-                    Object [] fila = new Object[4];
+                    fila = new Object[4];
 
                     for (int i = 1; i <= 4; i++)
                         fila[i-1] = rs.getObject(i);
 
-                    ResultSet r = new CursoBD().consulta("SELECT `profesor_nombre`, `profesor_id` FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + 
+                    r = conexion_bd.consulta(conexion, "SELECT `profesor_nombre`, `profesor_id` FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + 
                                                          fila[0].toString() + "';");
                     r.next();
-                    Object nombre_Profesor = r.getObject(1);
-                    Object url_Pagina = r.getObject(2);
+                    nombre_Profesor = r.getObject(1);
+                    url_Pagina = r.getObject(2);
             
                     out.println("<tr>");
                     out.println("<td><a href=\"profesor?id=" + url_Pagina + "\">" + nombre_Profesor + "</a></td>");
