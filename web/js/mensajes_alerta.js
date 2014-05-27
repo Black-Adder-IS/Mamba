@@ -7,11 +7,11 @@ $(document).ready(function() {
     var muestra_mensajes = function() {
         var cuerpo = $('body');
         if (localStorage.mensaje) {
-            cuerpo.prepend('<div data-alert class="alert-box alerta">' + localStorage.mensaje + '</div>');
+            cuerpo.prepend('<div data-alert class="alert-box alerta pulse animated">' + localStorage.mensaje + '</div>');
             localStorage.removeItem("mensaje");
         }
         if (localStorage.mensaje_error) {
-            cuerpo.prepend('<div data-alert class="alert-box warning alerta">' + localStorage.mensaje_error + '</div>');
+            cuerpo.prepend('<div data-alert class="alert-box warning alerta pulse animated">' + localStorage.mensaje_error + '</div>');
             localStorage.removeItem("mensaje_error");
         }
     };

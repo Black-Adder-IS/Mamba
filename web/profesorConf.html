@@ -4,6 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Escuela de Inglés | Bienvenido</title>
+        <link rel="stylesheet" href="css/animate.css" />
         <link rel="stylesheet" href="css/foundation.css" />
         <link rel="stylesheet" href="css/index.css" />
         <link rel="stylesheet" href="css/html.css" />
@@ -44,7 +45,7 @@
         <div class="row">
             <div class="small-12 large-12 columns text-center">
                 <!--<h1>Pamelia Marisela Zaahira Annabella</h1>-->
-                <dl class="tabs vertical slideInLeft animated" data-tab>
+                <dl class="tabs vertical fadeInDown animated" data-tab>
                     <dd class="active"><a href="#panel1a">Ofrecer Curso</a></dd>
                     <dd><a href="#panel2a">Notificaciones pendientes</a></dd>
                     <dd><a href="#panel3a">Cursos en espera</a></dd>
@@ -52,7 +53,7 @@
                     <dd><a href="#panel5a">Cursos finalizados</a></dd>
                     <dd><a href="#panel6a">Configuración </a></dd>
                 </dl>
-                <div class="tabs-content vertical slideInRight animated">
+                <div class="tabs-content vertical fadeIn animated">
                     <div class="content active" id="panel1a">
                         <form>
                             <div class="row">
@@ -163,20 +164,20 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="row">
-                                <form method="POST" action="SubirArchivos?correo_profesor=10@gmail.com" enctype="multipart/form-data">
+                                <div class="row">
+                                    <form method="POST" action="SubirArchivos?correo_profesor=10@gmail.com" enctype="multipart/form-data">
+                                        <div class="large-4 columns text-center">
+                                            <input type="submit" class="button success small" value="Subir video">
+                                        </div>
+                                        <div class="large-4 columns text-center">
+                                            <input type="submit" class="button success small" value="Subir constancia">
+                                            <input type="file" name="File">
+                                        </div>
+                                    </form>
                                     <div class="large-4 columns text-center">
-                                        <input type="submit" class="button success small" value="Subir video">
+                                        <a href="#" id="subir" class="button small">Guardar cambios</a>
                                     </div>
-                                    <div class="large-4 columns text-center">
-                                        <input type="submit" class="button success small" value="Subir constancia">
-                                        <input type="file" name="File">
-                                    </div>
-                                </form>
-                                <div class="large-4 columns text-center">
-                                    <a href="#" id="subir" class="button small">Guardar cambios</a>
                                 </div>
-                            </div>
                             <a href="#" class="button alert" data-reveal-id="borrarModal" data-reveal>Borrar Cuenta</a>
                         </div>
                     </div>
@@ -186,7 +187,7 @@
         <script src="js/vendor/jquery.js"></script>
         <script src="js/foundation.min.js"></script>
         <script>
-                                        $(document).foundation();
+            $(document).foundation();
         </script>
     </body>
 </html>
