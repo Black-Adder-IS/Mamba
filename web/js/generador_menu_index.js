@@ -13,9 +13,9 @@ $( document ).ready(function() {
         var f_html = "";
         var menu = $('#menu-ul');//.html('<li class="arrow unavailable"><a href="#">&laquo;</a></li>');
         menu.html('');
-        f_index = profundidad === 0 ? "":"../../";
+        f_index = profundidad === 0 ? "./":"../../";
         f_html = profundidad === 0 ? "html/":"";
-        menu.append('<li><a class="button alert tiny menu_button" href="./">Inicio</a></li>');
+        menu.append('<li><a class="button alert tiny menu_button" href="' + f_index + '">Inicio</a></li>');
         menu.append('<li><a class="button alert tiny menu_button" href="'+f_html+'horarios.html">Horarios</a></li>');
         menu.append('<li><a class="button alert tiny menu_button" href="'+f_html+'profesores.html">Profesores</a></li>');
         menu.append('<li></br></li>');

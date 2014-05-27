@@ -77,9 +77,10 @@ $( document ).ready(function() {
         });
         //Pide los profesores que cazan con el filtro
         $.post('../Profesor',{tipo:2, filtro:filtro, cantidad:elementos_por_pagina, pagina:pagina},function(profesores) { 
+            console.log("pagina" + pagina);
             $('#profesores_tbl').html("");
             $.each(profesores, function(i, profesor) {
-                console.log(profesor);
+                //console.log(profesor);
                 $('#profesores_tbl').append(profesor);
             });
         });
@@ -115,7 +116,7 @@ $( document ).ready(function() {
                 $.post('../Profesor',{tipo:2, filtro:filtro, cantidad:elementos_por_pagina, pagina:0},function(profesores) { 
                     $('#profesores_tbl').html("");
                     $.each(profesores, function(i, profesor) {
-                        console.log(profesor);
+                        //console.log(profesor);
                         $('#profesores_tbl').append(profesor);
                     });
                     renueva_pag_prof(cantidad, elementos_por_pagina);
