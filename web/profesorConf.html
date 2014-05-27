@@ -40,11 +40,11 @@
                 </ul>
             </div>
         </div>
-        <div class="separador"></div>
+        <div class="separador fadeIn animated"></div>
         <div class="row">
             <div class="small-12 large-12 columns text-center">
                 <!--<h1>Pamelia Marisela Zaahira Annabella</h1>-->
-                <dl class="tabs vertical" data-tab>
+                <dl class="tabs vertical slideInLeft animated" data-tab>
                     <dd class="active"><a href="#panel1a">Ofrecer Curso</a></dd>
                     <dd><a href="#panel2a">Notificaciones pendientes</a></dd>
                     <dd><a href="#panel3a">Cursos en espera</a></dd>
@@ -52,7 +52,7 @@
                     <dd><a href="#panel5a">Cursos finalizados</a></dd>
                     <dd><a href="#panel6a">Configuración </a></dd>
                 </dl>
-                <div class="tabs-content vertical">
+                <div class="tabs-content vertical slideInRight animated">
                     <div class="content active" id="panel1a">
                         <form>
                             <div class="row">
@@ -96,20 +96,6 @@
                                     <th width="20%">Acción</th>
                                 </tr>
                             </thead>
-                         <!--   <tbody>
-              <tr>
-                <td>Pancho el Golpeado López</td>
-                <td>Principiante</td>
-                <td>5:00 - 6:00</td>
-                <td>
-                  <a href="#" data-dropdown="drop_1" class="button dropdown tiny">Acción</a><br>
-                  <ul id="drop_1" data-dropdown-content class="f-dropdown">
-                    <li><a href="#">Aceptar</a></li>
-                    <li><a href="#">Rechazar</a></li>
-                  </ul>
-                </td>
-              </tr>
-                            </tbody>-->
                             <tbody id="notificaciones_Pendientes">
                             </tbody>
                         </table>
@@ -177,20 +163,20 @@
                                     </div>
                                 </div>
                             </form>
-                                <div class="row">
-                                    <form method="POST" action="SubirArchivos?correo_profesor=10@gmail.com" enctype="multipart/form-data">
-                                        <div class="large-4 columns text-center">
-                                            <input type="submit" class="button success small" value="Subir video">
-                                        </div>
-                                        <div class="large-4 columns text-center">
-                                            <input type="submit" class="button success small" value="Subir constancia">
-                                            <input type="file" name="File">
-                                        </div>
-                                    </form>
+                            <div class="row">
+                                <form method="POST" action="SubirArchivos?correo_profesor=10@gmail.com" enctype="multipart/form-data">
                                     <div class="large-4 columns text-center">
-                                        <a href="#" id="subir" class="button small">Guardar cambios</a>
+                                        <input type="submit" class="button success small" value="Subir video">
                                     </div>
+                                    <div class="large-4 columns text-center">
+                                        <input type="submit" class="button success small" value="Subir constancia">
+                                        <input type="file" name="File">
+                                    </div>
+                                </form>
+                                <div class="large-4 columns text-center">
+                                    <a href="#" id="subir" class="button small">Guardar cambios</a>
                                 </div>
+                            </div>
                             <a href="#" class="button alert" data-reveal-id="borrarModal" data-reveal>Borrar Cuenta</a>
                         </div>
                     </div>
@@ -200,7 +186,7 @@
         <script src="js/vendor/jquery.js"></script>
         <script src="js/foundation.min.js"></script>
         <script>
-            $(document).foundation();
+                                        $(document).foundation();
         </script>
     </body>
 </html>

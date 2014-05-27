@@ -74,7 +74,7 @@ public class CursoBD extends ConexionBD{
         if (!filtro.trim().equals("")) {
             consulta += "AND curso_tipo = \"" + filtro.trim() + "\" ";
         }
-        consulta += "LIMIT " + pagina * cantidad + ", " + (pagina + 1) * cantidad +";";
+        consulta += "LIMIT " + pagina * cantidad + ", " + cantidad +";";
         System.out.println(consulta);
         Connection conexion;
         conexion = getConexion();

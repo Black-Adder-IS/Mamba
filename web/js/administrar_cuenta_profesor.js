@@ -33,6 +33,7 @@ $(document).ready(function() {
             correo_Profesor : correoVar
         }, function (respuesta) {
             $('#notificaciones_Pendientes').html(respuesta);
+            $(document).foundation();
     });
     
     $.post('Profesor?operacion=obtener_Cursos_Espera', {
@@ -179,7 +180,7 @@ var asignar_curso = function(id_curso, aceptado) {
 
 var eliminar_curso = function(id_curso) {
     $.post('Curso?operacion=eliminar_Curso', {
-            id_Curso : id_curso,
+            id_Curso : id_curso
         }, function(respuesta) {          
             if (parseInt(respuesta) === 4) {                
                 localStorage.setItem('mensaje', "Acción realizada"); 

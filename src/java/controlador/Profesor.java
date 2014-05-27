@@ -236,10 +236,10 @@ public class Profesor extends HttpServlet {
                         out.println("<td>" + fila[2] + "</td>");
                         out.println("<td>" + fila[3].toString().substring(0, 5) + " - " + fila[4].toString().substring(0, 5) + "</td>");
                         out.println("<td>");
-                        out.println("<a href=\"#\" class=\"button dropdown tiny\" data-dropdown=\"drop\">Acción</a>");
+                        out.println("<a href='#' class='button dropdown tiny' data-dropdown='drop" + j +"'>Acción</a>");
                         out.println("<br>");
-                        out.println("<ul id=\"drop" + (j++) + "\" data-dropdown-content class=\"f-dropdown\">");
-                        out.println("<li><a href=\"#\">Aceptar</a></li>");//onclick=\"asignar_curso(" + fila[0] + ",true)\">Aceptar</a></li>");
+                        out.println("<ul id='drop" + (j++) + "' data-dropdown-content class='f-dropdown'>");
+                        out.println("<li><a href='#'>Aceptar</a></li>");//onclick=\"asignar_curso(" + fila[0] + ",true)\">Aceptar</a></li>");
                         //out.println("<li><a href=\"#\" onclick=\"asignar_curso(" + fila[0] + ",false)\">Rechazar</a></li>");
                         out.println("</ul>");
                         out.println("</td>");

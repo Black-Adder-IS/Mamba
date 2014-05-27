@@ -94,8 +94,8 @@ public class ProfesorBD extends ConexionBD{
             consulta += "WHERE curso_tipo = \"" + filtro.trim() + "\" ";
         }
         consulta += "GROUP BY profesor_id) AS foo ";
-        consulta += "LIMIT " + pagina * cantidad + ", " + (pagina + 1) * cantidad +";";
-        System.out.println(consulta);
+        consulta += "LIMIT " + pagina * cantidad + ", " + cantidad +";";
+        System.out.println("@@@@@@@Consulta: " + consulta);
         Connection conexion;
         conexion = getConexion();
         ResultSet resultado =  consulta(conexion, consulta);
