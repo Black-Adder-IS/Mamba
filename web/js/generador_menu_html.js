@@ -15,13 +15,12 @@ $( document ).ready(function() {
         menu.html('');
         f_index = profundidad === 0 ? "":"../";
         f_html = profundidad === 0 ? "html/":"";
-        
         menu.append('<li><a class="button alert tiny menu_button" href="' + f_index + 'index.html">Inicio</a></li>');
         menu.append('<li><a class="button alert tiny menu_button" href="'+f_html+'horarios.html">Horarios</a></li>');
         menu.append('<li><a class="button alert tiny menu_button" href="'+f_html+'profesores.html">Profesores</a></li>');
         if(!localStorage.tipo || localStorage.tipo === ""){
             menu.append('<li><a class="button alert tiny menu_button" href="#" data-reveal-id="iniciarModal" data-reveal>Ingresar</a></li>');
-            //menu.append('<li><a href="#" data-reveal-id="myModal" data-reveal>Registrar</a></li>');
+            menu.append('<li><a class="button alert tiny menu_button" href="#" data-reveal-id="myModal" data-reveal>Registrar</a></li>');
         }else{
           if(localStorage.tipo === "profesor"){
             menu.append('<li><a class="button alert tiny menu_button" href="'+f_index+'profesorConf.html">Cuenta</a></li>');

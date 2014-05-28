@@ -16,6 +16,8 @@
         <script src="../js/generador_menu_html.js"></script>
         <script src="../js/inicio_sesion_html.js"></script>
         <script src="../js/mensajes_alerta.js"></script>
+        <script src="../js/registro_estudiante_html.js"></script>
+        <script src="../js/registro_profesor_html.js"></script>
         <style type="text/css">
             .vjs-default-skin .vjs-control-bar { font-size: 89% }
         </style>
@@ -66,87 +68,113 @@
                 <h5>Enseña</h5>
                 <p>Ofrece cursos eligiendo los horarios que quieras y a alumnos de tu agrado.</p>
                 <a href="#" class="small button" data-reveal-id="registroMaestroModal" data-reveal>Enseñar</a>
-            </div>
-            <a class="close-reveal-modal">&#215;</a>
+            </div>    <a class="close-reveal-modal">&#215;</a>
         </div>
 
         <div id="registroAlumnoModal" class="reveal-modal" data-reveal>
-            <h2>Registro de Alumno</h2>
-
-            <form>
+            <h2>
+                Registro de Alumno
+            </h2>
+            <form data-abide>
                 <div class="row">
                     <div class="large-12 columns">
-                        <label>Nombre
-                            <input type="text" placeholder="large-12.columns" />
-                        </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="large-4 columns">
-                        <label>Correo
-                            <input type="text" placeholder="large-4.columns" />
-                        </label>
-                    </div>
-                    <div class="large-4 columns">
-                        <label>Constraseña
-                            <input type="text" placeholder="min. 6 caracteres" />
-                        </label>
-                    </div>
-                    <div class="large-4 columns">
-                        <label>Nivel de Inglés
-                            <select>
-                                <option value="husker">Principiante</option>
-                                <option value="starbuck">Intermedio</option>
-                                <option value="hotdog">Avanzado</option>
-                            </select>
-                        </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="large-12 columns text-center">
-                        <a href="#" class="button">Registrar</a>
-                    </div>
-                </div>
-            </form>
-
-            <a class="close-reveal-modal">&#215;</a>
-        </div>
-        <div id="registroMaestroModal" class="reveal-modal" data-reveal>
-            <h2>Registro de Maestro</h2>
-            <form>
-                <div class="row">
-                    <div class="large-12 columns">
-                        <label>Nombre
-                            <input type="text" placeholder="large-12.columns" />
-                        </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="large-6 columns">
-                        <label>Correo
-                            <input type="text" placeholder="large-4.columns" />
-                        </label>
-                    </div>
-                    <div class="large-6 columns">
-                        <label>Constraseña
-                            <input type="text" placeholder="min. 6 caracteres" />
-                        </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="large-12 columns text-center">
-                        <div class="panel">
-                            <p>Despúes del registro debes subir un video de 1 minuto presentandote y una constancia antes de poder ofrecer cursos.</p>
+                        <div class="input-wrapper">
+                            <label>
+                                Nombre
+                                <input type="text" id="nombre_Estudiante" placeholder="min. 4 caracteres - max. 100 caracteres" pattern="\w{4,100}"/>
+                            </label>
+                            <small class="error">Introduce un nombre válido (solo alfanumericos)</small>
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="large-6 columns">
+                        <div class="input-wrapper">
+                            <label>
+                                Correo
+                                <input type="email" id="correo_Estudiante" placeholder="min. 4 caracteres - max. 50 caracteres"><!-- pattern="[\w]{1,10}@([\w-]{1,10}\.)[\w-]{1,28}"/-->
+                            </label>
+                            <small class="error">Introduce un correo válido.</small>
+                        </div>
+                    </div>
+
+                    <div class="large-6 columns">
+                        <div class="password-field">
+                            <label>
+                                Constraseña
+                                <input type="password" id="contrasenia_Estudiante" placeholder="min. 6 caracteres - max. 50 caracteres" pattern=".{6,50}"/>
+                            </label>
+                            <small class="error">Introduce una contraseña válida.</small>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="large-12 columns text-center">
-                        <a href="#" class="button">Registrar</a>
+                        <br>
+                        <br>
+                        <a href="#" id="registrarEstudiante" class="button">Registrar</a>
                     </div>
                 </div>
             </form>
-            <a class="close-reveal-modal">&#215;</a>
+
+            <a class="close-reveal-modal">
+                &#215;
+            </a>
+        </div>
+
+        <div id="registroMaestroModal" class="reveal-modal" data-reveal>
+            <h2>
+                Registro de Maestro
+            </h2>
+            <form data-abide>
+                <div class="row">
+                    <div class="large-12 columns">
+                        <div class="input-wrapper">
+                            <label>
+                                Nombre
+                                <input type="text" id="nombre_Profesor" placeholder="min. 4 caracteres - max. 100 caracteres" pattern="\w{4,100}"/>
+                            </label>
+                            <small class="error">Introduce un nombre válido (solo alfanumericos)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="large-6 columns">
+                        <div class="input-wrapper">
+                            <label>
+                                Correo
+                                <input type="email" id="correo_Profesor" placeholder="min. 4 caracteres - max. 50 caracteres"><!-- pattern="[\w]{1,10}@([\w-]{1,10}\.)[\w-]{1,28}"/-->
+                            </label>
+                            <small class="error">Introduce un correo válido.</small>
+                        </div>
+                    </div>
+
+                    <div class="large-6 columns">
+                        <div class="password-field">
+                            <label>
+                                Constraseña
+                                <input type="password" id="contrasenia_Profesor" placeholder="min. 6 caracteres - max. 50 caracteres" pattern=".{6,50}"/>
+                            </label>
+                            <small class="error">Introduce una contraseña válida.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="large-12 columns text-center">
+                        <br>
+                        <br>
+                        <a href="#" id="registrarProfesor" class="button">Registrar</a>
+                    </div>
+                </div>
+            </form>
+
+            <a class="close-reveal-modal">
+                &#215;
+            </a>
         </div>
 
         <div class="row fadeInDown animated">
