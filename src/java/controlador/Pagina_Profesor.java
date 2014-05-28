@@ -218,10 +218,11 @@ out.println("        <span class='secondary label'>Cursos en progreso: " + profe
 out.println("        <span class='secondary label'>Cursos disponilbes: " + profesor.cursos_espera + "</span>");
 out.println("      </div>");
 out.println("<video id='a240e92d' class='sublime' poster='https://cdn.sublimevideo.net/vpa/ms_800.jpg' width='640' height='360' title='Midnight Sun' data-uid='a240e92d' data-autoresize='fit' preload='none'>");
-out.println("  <source src='https://cdn.sublimevideo.net/vpa/ms_360p.mp4' />");
-out.println("  <source src='https://cdn.sublimevideo.net/vpa/ms_720p.mp4' data-quality='hd' />");
-out.println("  <source src='https://cdn.sublimevideo.net/vpa/ms_360p.webm' />");
-out.println("  <source src='https://cdn.sublimevideo.net/vpa/ms_720p.webm' data-quality='hd' />");
+out.println("  <source src='" + profesor.video_url + "' />");
+//out.println("  <source src='https://cdn.sublimevideo.net/vpa/ms_360p.mp4' />");
+//out.println("  <source src='https://cdn.sublimevideo.net/vpa/ms_720p.mp4' data-quality='hd' />");
+//out.println("  <source src='https://cdn.sublimevideo.net/vpa/ms_360p.webm' />");
+//out.println("  <source src='https://cdn.sublimevideo.net/vpa/ms_720p.webm' data-quality='hd' />");
 out.println("</video>");
 out.println("    </div>");
 out.println("  </div>");
