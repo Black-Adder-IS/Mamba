@@ -29,7 +29,20 @@ $(document).ready(function() {
         $('#hora_Final').append('<option value="' + i + '">' + i + ':00</option>');
         $('#hora_Final').append('<option value="' + i + 't">' + i + ':30</option>');
     }
-
+    
+    $.post('Profesor?operacion=obtener_Id', {
+        correo_Profesor: correoVar
+    }, function(respuesta) {
+        $('#subirArchivos').html('<form method="POST" action="SubirArchivos?id_Profesor=' + respuesta + '" enctype="multipart/form-data">'
+                             + '<div class="large-4 columns text-center">'
+                             + '<input type="submit" class="button success small" value="Subir video">'
+                             + '</div>'
+                             + ' <div class="large-4 columns text-center">'
+                             + '<input type="submit" class="button success small" value="Subir constancia"><input type="file" name="File">'
+                             + '</div></form><div class="large-4 columns text-center"><a href="#" id="subir" class="button small">Guardar cambios</a></div>');
+                             $(document).foundation()
+    });
+    
     $.post('Profesor?operacion=obtener_Notificaciones_Pendientes', {
         correo_Profesor: correoVar
     }, function(respuesta) {
@@ -159,7 +172,7 @@ var calificar_curso = function(id_Curso) {
             } else if (parseInt(respuesta) === 3) {
                 localStorage.setItem('mensaje_error', "No se ha podido calificar el curso");
             }
-            location.href = "profesorConf.html";
+            $(document).foundation();
         });
     }
 };

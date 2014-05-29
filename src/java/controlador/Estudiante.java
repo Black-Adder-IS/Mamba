@@ -87,6 +87,7 @@ public class Estudiante extends HttpServlet {
             }
         }
         
+        response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         if (operacion.equals("registrar_Estudiante")) {
             String nombre = request.getParameter("nombre_Estudiante");

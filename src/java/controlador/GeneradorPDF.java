@@ -27,6 +27,7 @@ public class GeneradorPDF {
 
     /**
      *
+     * @param curso_id
      * @param nombre_estudiante
      * @param promedio
      * @param tipo_curso

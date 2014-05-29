@@ -170,7 +170,7 @@ public class ProfesorBD extends ConexionBD{
         boolean encontrado = false;
                 
         Connection conexion = super.conectarBD();
-        ResultSet resultado = super.consultar(conexion, consulta);
+        ResultSet resultado = super.consulta(conexion, consulta);
             
         if (resultado == null) {
             return false;
@@ -200,8 +200,7 @@ public class ProfesorBD extends ConexionBD{
         return !encontrado;
     }
     
-    public int editar_profesor(String correoA, String nombre, String correo, String contrasenia, String url_video, String url_constancia) {
-        String consulta = "SELECT * FROM `Escuela`.`Profesor`";
+    public int editar_profesor(String id, String correoA, String nombre, String correo, String contrasenia, String url_video, String url_constancia) {
         int ex = -1;
         String query = "";
         
@@ -227,7 +226,10 @@ public class ProfesorBD extends ConexionBD{
             query = "UPDATE `Escuela`.`Profesor` SET" + query;
             int temp = query.length() - 1;
             query = query.substring(0, temp);
-            query += " WHERE `profesor_correo`='" + correoA + "';";
+            if (id.equals(""))
+                query += " WHERE `profesor_correo`='" + correoA + "';";
+            else
+                query += " WHERE `profesor_id`='" + id + "';";
 
         } else {
             return ex;

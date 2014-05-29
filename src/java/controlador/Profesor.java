@@ -14,6 +14,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -169,12 +171,12 @@ public class Profesor extends HttpServlet {
                 String nombre = request.getParameter("nuevo_nombre_Profesor");
                 String correo = request.getParameter("nuevo_correo_Profesor");
                 String contrasenia = request.getParameter("nuevo_contrasenia_Profesor");
-                String url_constancia = "";//data/constancias/" + correo + ".pdf";
-                String url_video = "";//"data/videos/" + correo + ".mp4";*()
+                String url_constancia = "";
+                String url_video = "";
 
                 String cuerpo_Correo = "";
                 
-                if (new ProfesorBD().editar_profesor(correoA, nombre, correo, contrasenia, url_video, url_constancia) == 1) {
+                if (new ProfesorBD().editar_profesor("", correoA, nombre, correo, contrasenia, url_video, url_constancia) == 1) {
                     out.println(CONFIRMACION_EDICION);
                     Date date = new Date();
                     DateFormat hora = new SimpleDateFormat("HH:mm:ss");
@@ -239,8 +241,8 @@ public class Profesor extends HttpServlet {
                         out.println("<a href='#' class='button dropdown tiny' data-dropdown='drop" + j +"'>Acción</a>");
                         out.println("<br>");
                         out.println("<ul id='drop" + (j++) + "' data-dropdown-content class='f-dropdown'>");
-                        out.println("<li><a href='#'>Aceptar</a></li>");//onclick=\"asignar_curso(" + fila[0] + ",true)\">Aceptar</a></li>");
-                        //out.println("<li><a href=\"#\" onclick=\"asignar_curso(" + fila[0] + ",false)\">Rechazar</a></li>");
+                        out.println("<li><a href=\"#\" onclick=\"asignar_curso(" + fila[0] + ",true)\">Aceptar</a></li>");
+                        out.println("<li><a href=\"#\" onclick=\"asignar_curso(" + fila[0] + ",false)\">Rechazar</a></li>");
                         out.println("</ul>");
                         out.println("</td>");
                         out.println("</tr>");
@@ -249,6 +251,18 @@ public class Profesor extends HttpServlet {
                     e.printStackTrace();
                 }
 
+            } else if (operacion.equals("obtener_Cursos_Espera")) {
+                String correo = request.getParameter("correo_Profesor");
+                ConexionBD conexion_bd = new ConexionBD();
+                Connection conexion = conexion_bd.conectarBD();
+                ResultSet rs = conexion_bd.consulta(conexion, "SELECT `profesor_id` FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + correo + "';");
+                
+                try {
+                    rs.next();
+                    out.println(rs.getString(1));
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             } else if (operacion.equals("obtener_Cursos_Espera")) {
                 String correo = request.getParameter("correo_Profesor");
                 ConexionBD conexion_bd = new ConexionBD();

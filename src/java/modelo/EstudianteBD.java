@@ -50,7 +50,7 @@ public class EstudianteBD extends ConexionBD{
         Connection conexion = super.conectarBD();
         if (conexion == null) {
         }
-        ResultSet resultado = super.consultar(conexion, consulta);
+        ResultSet resultado = super.consulta(conexion, consulta);
             
         if (resultado == null) {
             return false;

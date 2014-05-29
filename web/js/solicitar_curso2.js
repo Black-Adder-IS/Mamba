@@ -19,9 +19,14 @@ $( document ).ready(function() {
         
         
         //Pide los profesores que cazan con el filtro
-        $.post('../Curso',{tipo:3, estudiante:localStorage.id, curso:curso},function(profesores) { 
-            renglon.remove();
-            $('body').prepend(' <div id="solicitar_alert" data-alert class="alert-box alerta">Curso solicitado</div>');
+        $.post('../Curso',{tipo:3, estudiante:localStorage.id, curso:curso},function(profesores) {
+            console.log(profesores);
+            if (parseInt(profesores) === 8) {
+                renglon.remove();
+                $('body').prepend('<div id="solicitar_alert" data-alert class="alert-box alerta">Curso solicitado</div>');
+            } else {
+                $('body').prepend('<div id="solicitar_alert" data-alert class="alert-box warning alerta pulse animated">No se puede solicitar el curso</div>');
+            }
         });
     });
 });

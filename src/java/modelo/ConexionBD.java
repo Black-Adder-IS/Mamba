@@ -73,13 +73,11 @@ public class ConexionBD {
      * @param consulta es la consulta que se le va a hacer a la base de datos
      * @return  el resultado de la consulta
      */
-    public ResultSet consulta (Connection conexion, String consulta) {
+    public ResultSet consulta(Connection conexion, String consulta) {
         ResultSet resultado = null;
         try {
-            
-            String query = consulta;
             Statement st = conexion.createStatement();
-            resultado = st.executeQuery(query);
+            resultado = st.executeQuery(consulta);
         }
         catch( Exception e ) {
             e.printStackTrace();
@@ -95,15 +93,11 @@ public class ConexionBD {
      * @param consulta es la actualización que se le hará a la base de datos
      * @return la cantidad de renglones de la base de datos que se actualizaron
      */
-    public int actualiza (Connection conexion, String consulta) {
+    public int actualiza(Connection conexion, String consulta) {
         int resultado = 0;
         try {
-            // Instrucción SQL para obtener los datos
-            // del usuario indicado :
-            //String query = "select * from Estudiante";
-            String query = consulta;
             Statement st = conexion.createStatement();
-            resultado = st.executeUpdate(query);
+            resultado = st.executeUpdate(consulta);
         }
         catch( Exception e ) {
             e.printStackTrace();
@@ -133,17 +127,5 @@ public class ConexionBD {
         } catch( SQLException e ) {
             e.printStackTrace();
         }
-    }
-    
-    public ResultSet consultar(Connection conexion, String query) {
-        ResultSet resultado = null;
-        try {
-            Statement st = conexion.createStatement();
-            resultado = st.executeQuery(query);
-        }
-        catch( Exception e ) {
-            e.printStackTrace();
-        }
-        return resultado;
     }
 }

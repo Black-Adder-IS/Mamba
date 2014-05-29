@@ -39,6 +39,7 @@ public class Curso extends HttpServlet {
     private final String RECHAZO_BORRADO = "5";
     private final String CONFIRMACION_ASIGNADO = "6";
     private final String RECHAZO_ASIGNADO = "7";
+    private final String CONFIRMACION_SOLICITUD = "8";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -124,10 +125,56 @@ public class Curso extends HttpServlet {
                     cursoBD = new CursoBD();
                     try {
                         exito = cursoBD.solicitar_curso(estudiante, curso);
+                        if (exito) {
+                            try (PrintWriter out = response.getWriter()) {
+                                out.println(CONFIRMACION_SOLICITUD);
+                            }
+                            Date date = new Date();
+                            DateFormat hora = new SimpleDateFormat("HH:mm:ss");
+                            DateFormat fecha = new SimpleDateFormat("dd/MM/yyyy");
+                            Correo enviar_correo = new Correo();
+                            ConexionBD conexion_bd = new ConexionBD();
+                            Connection conexion = conexion_bd.conectarBD();
+                            ResultSet rs = conexion_bd.consulta(conexion, "SELECT `estudiante_correo`, `profesor_correo`, `curso_tipo`, `curso_inicio`, `curso_final` " +
+                                                                  "FROM `Escuela`.`Curso` WHERE `curso_estado`='Confirmando' AND `curso_id`=" + curso +";");
+
+
+                            ResultSet r;
+                            String nombre_Estudiante;
+                            String nombre_Profesor;
+                            Object [] fila;
+                            try {
+                                rs.next();
+                                fila = new Object[5];
+
+                                for (int i = 1; i <= 5; i++)
+                                    fila[i-1] = rs.getObject(i);
+
+                                r = conexion_bd.consulta(conexion, "SELECT `estudiante_nombre` FROM `Escuela`.`Estudiante` WHERE `estudiante_correo`='" + 
+                                                                         fila[0].toString() + "';");
+                                r.next();
+                                nombre_Estudiante = r.getObject(1).toString();
+
+                                r = conexion_bd.consulta(conexion, "SELECT `profesor_nombre` FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + 
+                                                                         fila[1].toString() + "';");
+                                r.next();
+                                nombre_Profesor = r.getObject(1).toString();
+
+                                enviar_correo.cuerpo_Correo(fila[1].toString(), "Solicitud de Curso ", "Estimado Profesor " + nombre_Profesor
+                                        + ", por este medio le informamos que el estudiante " + nombre_Estudiante
+                                        + " ha solicitado su curso."
+                                        + "\nTipo de curso: " + fila[2].toString()
+                                        + "\nHorario: " + fila[3].toString().substring(0, 5) + " - " + fila[4].toString().substring(0, 5) + " horas"
+                                        + "\nContacto estudiante: " + fila[0].toString()
+                                        + ".\n\n\n"
+                                        + "Hora de envío: " + hora.format(date)
+                                        + "\nFecha de envío: " + fecha.format(date));
+                                enviar_correo.enviar_Correo();
+                            } catch(SQLException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
                     } catch (SQLException e) {
-                    }
-                    try (PrintWriter out = response.getWriter()) {
-                        out.println("" + exito);
                     }
             }
             return;
@@ -159,6 +206,7 @@ public class Curso extends HttpServlet {
             
             if (new CursoBD().asignar_curso(id, asignado)) {
                 out.println(CONFIRMACION_ASIGNADO);
+                
                 if (asignado) {
                     Date date = new Date();
                     DateFormat hora = new SimpleDateFormat("HH:mm:ss");
@@ -166,13 +214,14 @@ public class Curso extends HttpServlet {
                     Correo enviar_correo = new Correo();
                     ConexionBD conexion_bd = new ConexionBD();
                     Connection conexion = conexion_bd.conectarBD();
-                    ResultSet rs = conexion_bd.consulta(conexion, "SELECT `estudiante_correo`, `profesor_correo`, `curso_tipo`, `curso_inicio`, `curso_final`" +
-                                                          "FROM `Escuela`.`Curso` WHERE `curso_estado`='Confirmando' AND `curso_id`='" + id +"';");
+                    ResultSet rs = conexion_bd.consulta(conexion, "SELECT `estudiante_correo`, `profesor_correo`, `curso_tipo`, `curso_inicio`, `curso_final` " +
+                                                          "FROM `Escuela`.`Curso` WHERE `curso_estado`='Cursando' AND `curso_id`=" + id +";");
+
 
                     ResultSet r;
-                    String nombre_Estudiante = "";
-                    String nombre_Profesor = "";
-                    Object [] fila = null;
+                    String nombre_Estudiante;
+                    String nombre_Profesor;
+                    Object [] fila;
                     try {
                         rs.next();
                         fila = new Object[5];
@@ -190,18 +239,18 @@ public class Curso extends HttpServlet {
                         r.next();
                         nombre_Profesor = r.getObject(1).toString();
 
-                    } catch(Exception e) {
-                        e.printStackTrace();
+                        enviar_correo.cuerpo_Correo(fila[0].toString(), "Fuiste aceptado al curso del Profesor " + nombre_Profesor, "Estimado " + nombre_Estudiante
+                                + ", por este medio te informamos que el Profesor " + nombre_Profesor + " (" + fila[1].toString() + ")"
+                                + " ha aceptado tu solicitud"
+                                + "\nTipo de curso: " + fila[2].toString()
+                                + "\nHorario: " + fila[3].toString().substring(0, 5) + " - " + fila[4].toString().substring(0, 5) + " horas"
+                                + ".\n\n\n"
+                                + "Hora de envío: " + hora.format(date)
+                                + "\nFecha de envío: " + fecha.format(date));
+                        enviar_correo.enviar_Correo();
+                    } catch(SQLException ex) {
+                        ex.printStackTrace();
                     }
-
-                    enviar_correo.cuerpo_Correo(fila[0].toString(), "Fuiste aceptado al curoso del Profesor " + nombre_Profesor, "Estimado " + nombre_Estudiante
-                            + ", por este medio te informamos que el Profesor " + nombre_Profesor + "(" + fila[1].toString() + ")"
-                            + " ha aceptado tu solicitud del curso de"
-                            + "tipo " + fila[2].toString() + " con horario" + fila[3].toString().substring(0, 5) + " - " + fila[4].toString().substring(0, 5)
-                            + ".\n\n\n"
-                            + "Hora de envío: " + hora.format(date)
-                            + "Fecha de envío: " + fecha.format(date));
-                    enviar_correo.enviar_Correo();
                 }
             } else {
                 out.println(RECHAZO_ASIGNADO);

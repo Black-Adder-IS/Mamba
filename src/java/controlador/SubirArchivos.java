@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,7 +30,7 @@ import org.apache.commons.io.FilenameUtils;
 @WebServlet(name = "SubirArchivos", urlPatterns = {"/SubirArchivos"})
 public class SubirArchivos extends HttpServlet {
 
-    String uploadDir = "../../../web/html/";
+    String uploadDir;
     
     /**
      * Processes requests for both HTTP
@@ -48,7 +46,8 @@ public class SubirArchivos extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String correo = request.getParameter("correo_profesor");
+        String id_Profesor = request.getParameter("id_profesor");
+        uploadDir = request.getSession().getServletContext().getRealPath("/");
         
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         if(!isMultipart){
@@ -76,18 +75,17 @@ public class SubirArchivos extends HttpServlet {
                     File f = null;
                     
                     if (fileName.substring(fileName.length()-3).equals("pdf")) {
-                        f = checkExist(correo + ".pdf");
-                        System.out.println(new ProfesorBD().editar_profesor(correo, "", "", "", "", uploadDir + correo + ".pdf"));
+                        f = checkExist(id_Profesor + ".pdf");
+                        System.out.println(new ProfesorBD().editar_profesor(id_Profesor, "", "", "", "", "", id_Profesor + ".pdf"));
                     }  if (fileName.substring(fileName.length()-3).equals("mp4")) {
-                        f = checkExist(correo + ".mp4");
-                        System.out.println(new ProfesorBD().editar_profesor(correo, "", "", "", uploadDir + correo + ".mp4", ""));
+                        f = checkExist(id_Profesor + ".mp4");
+                        System.out.println(new ProfesorBD().editar_profesor(id_Profesor, "", "", "", "", id_Profesor + ".mp4", ""));
                     }
                     
                     try {
                         item.write(f);
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        Logger.getLogger(SubirArchivos.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
             }
@@ -149,6 +147,7 @@ public class SubirArchivos extends HttpServlet {
             f.delete();
         }
         f = new File(uploadDir + correo);
+        System.out.println(f);
         return f;
     }
 }
