@@ -168,7 +168,7 @@ public class Estudiante extends HttpServlet {
             String correo = request.getParameter("correo_Estudiante");
             ConexionBD conexion_bd = new ConexionBD();
             Connection conexion = conexion_bd.conectarBD();
-            ResultSet rs = conexion_bd.consulta(conexion, "SELECT ALL `profesor_correo`, `curso_tipo`, `curso_calificacion`, `curso_nota`" +
+            ResultSet rs = conexion_bd.consulta(conexion, "SELECT ALL `profesor_correo`, `curso_tipo`, `curso_calificacion`, `curso_nota`, `curso_url_certificado`" +
                                                   "FROM `Escuela`.`Curso` WHERE `curso_estado`='Terminado' AND `estudiante_correo`='" + correo + "';");
             
             ResultSet r;
@@ -204,7 +204,7 @@ public class Estudiante extends HttpServlet {
                     } else {
                         out.println("<td>" + fila[2] + "</td>");
                         out.println("<td>");
-                        out.println("<a href=\"#\" class=\"button success radius tiny\">");
+                        out.println("<a target='_blank' href='" + rs.getString("curso_url_certificado") + "' class='button success radius tiny'>");
                         out.println("Descargar");
                         out.println("</a></td>");
                     }

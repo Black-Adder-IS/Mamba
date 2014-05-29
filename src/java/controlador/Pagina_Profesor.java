@@ -49,8 +49,6 @@ public class Pagina_Profesor extends HttpServlet {
                 System.out.println(e);
                 return;
             }
-            
-            
 out.println("<!doctype html>");
 out.println("<html class='no-js' lang='en'>");
 out.println("<head>");

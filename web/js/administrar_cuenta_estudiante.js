@@ -8,12 +8,14 @@ $(document).ready(function() {
             correo_Estudiante : correoVar
         }, function (respuesta) {
             $('#cursos_Actuales').html(respuesta);
+            $(document).foundation();
     });
     
     $.post('Estudiante?operacion=obtener_Cursos_Finalizados', {
             correo_Estudiante : correoVar
         }, function (respuesta) {
             $('#cursos_Finalizados').html(respuesta);
+            $(document).foundation();
     });
     
     $('#subir').click(function(event) {
