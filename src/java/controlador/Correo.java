@@ -24,7 +24,7 @@ public class Correo {
     private BodyPart [] archivos;
     
     public Correo() {
-        this("smtp.gmail.com", "587", "BlackAdderSoftware@gmail.com", "IngenieriaSoftware2014");
+        this("smtp.gmail.com", "587", "elementorsschoolofenglish@gmail.com", "IngenieriaSoftware2014");
     }
     
     public Correo(String servidor, String puerto, final String usuario, final String contrasenia) {
@@ -58,7 +58,7 @@ public class Correo {
     }
     
     public void cuerpo_Correo(String destinatario, String asunto, String cuerpo) {
-        this.cuerpo_Correo("BlackAdderSoftware@gmail.com", destinatario, asunto, cuerpo);
+        this.cuerpo_Correo("elementorsschoolofenglish@gmail.com", destinatario, asunto, cuerpo);
     }
     
     public void adjuntar_Archivo(String ... archivos) {

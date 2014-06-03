@@ -32,15 +32,12 @@ $(document).ready(function() {
     
     $.post('Profesor?operacion=obtener_Id', {
         correo_Profesor: correoVar
-    }, function(respuesta) {
-        $('#subirArchivos').html('<form method="POST" action="SubirArchivos?id_Profesor=' + respuesta + '" enctype="multipart/form-data">'
-                             + '<div class="large-4 columns text-center">'
-                             + '<input type="submit" class="button success small" value="Subir video">'
-                             + '</div>'
+        }, function(respuesta) {
+            $('#subirArchivos').html('<form method="POST" action="SubirArchivos?id_Profesor=' + respuesta + '" enctype="multipart/form-data">'
                              + ' <div class="large-4 columns text-center">'
-                             + '<input type="submit" class="button success small" value="Subir constancia"><input type="file" name="File">'
-                             + '</div></form><div class="large-4 columns text-center"><a href="#" id="subir" class="button small">Guardar cambios</a></div>');
-                             $(document).foundation()
+                             + '<input id="constancia" type="submit" class="button success small" value="Subir archivo"><input type="file" name="File">'
+                             + '</div></form>');
+                             $(document).foundation();
     });
     
     $.post('Profesor?operacion=obtener_Notificaciones_Pendientes', {
@@ -66,6 +63,18 @@ $(document).ready(function() {
         correo_Profesor: correoVar
     }, function(respuesta) {
         $('#cursos_Finalizados').html(respuesta);
+    });
+    
+    if (parseInt($("#ruleta_calificacion").val()) > 5) {
+        $("#nota_calificacion").hide();
+    }
+    ;
+    $("#ruleta_calificacion").change(function() {
+        if (parseInt($("#ruleta_calificacion").val()) > 5) {
+            $("#nota_calificacion").hide();
+        } else {
+            $("#nota_calificacion").show();
+        }
     });
 
     $('#subir').click(function(event) {
@@ -120,7 +129,78 @@ $(document).ready(function() {
             }
         });
     });
+    
+    $("#calificar_boton").on("click", function() {
+        califica_curso();
+        $('#calificacion_modal').foundation('reveal', 'close');
+    });
+    
+    $('#constancia').click(function(event) {
+        location.href="profesorConf.html"
+    });
+    
+    $('#video').click(function(event) {
+        location.href="profesorConf.html"
+    });
+
 });
+
+//Abre el modal para calificar el curso
+var calificar_curso = function(id_Curso) {
+    localStorage.setItem('id_calificando', id_Curso);
+    $('#calificacion_modal').foundation('reveal', 'open');
+    if (parseInt(calificacion_curso) <= 5) {
+        nota_curso = prompt("Introduce una nota para el curso");
+
+        if (parseInt(calificacion_curso) <= 5) {
+            nota_curso = prompt("Introduce una nota para el curso");
+        }
+        $.post('Curso?operacion=calificar_Curso', {
+            id: id_Curso,
+            calificacion: calificacion_curso,
+            nota: nota_curso
+        }, function(respuesta) {
+            if (parseInt(respuesta) === 2) {
+                localStorage.setItem('mensaje', "Curso calificado");
+            } else if (parseInt(respuesta) === 3) {
+                localStorage.setItem('mensaje_error', "No se ha podido calificar el curso");
+            }
+            $(document).foundation();
+        });
+    }
+    $.post('Curso?operacion=calificar_Curso', {
+        id: id_Curso,
+        calificacion: calificacion_curso,
+        nota: nota_curso
+    }, function(respuesta) {
+        if (parseInt(respuesta) === 2) {
+            localStorage.setItem('mensaje', "Curso calificado");
+        } else if (parseInt(respuesta) === 3) {
+            localStorage.setItem('mensaje_error', "No se ha podido calificar el curso");
+        }
+        $(document).foundation();
+    });
+
+};
+
+var califica_curso = function() {
+    var id_Curso = localStorage["id_calificando"];
+    var calificacion_curso = $("#ruleta_calificacion").val();
+    var nota_curso = $("#nota_texto").val();
+    $.post('Curso?operacion=calificar_Curso', {
+        id: id_Curso,
+        calificacion: calificacion_curso,
+        nota: nota_curso
+    }, function(respuesta) {
+        if (parseInt(respuesta) === 2) {
+            localStorage.setItem('mensaje', "Curso calificado");
+        } else if (parseInt(respuesta) === 3) {
+            localStorage.setItem('mensaje_error', "No se ha podido calificar el curso");
+        }
+        location.href = "profesorConf.html";
+    });
+};
+
 
 var crear_curso = function() {
     var posicion = document.getElementById('hora_Inicio').options.selectedIndex;
@@ -142,6 +222,8 @@ var crear_curso = function() {
             localStorage.setItem('mensaje', "Se ha creado el curso");
         } else if (parseInt(respuesta) === 1) {
             localStorage.setItem('mensaje_error', "No se puede crear el curso, ya está dando un curso a esa hora");
+        } else if (parseInt(respuesta) === 9) {
+            localStorage.setItem('mensaje_error', "No se puede crear el curso, no ha subido constancia o video");
         } else {
             localStorage.setItem('mensaje_error', "Hubo un fallo al intentar crear el curso");
         }
@@ -149,44 +231,19 @@ var crear_curso = function() {
     });
 };
 
-var calificar_curso = function(id_Curso) {
-    var calificacion_curso = prompt("Introduce calificación");
-    var nota_curso = "";
-
-    if (parseInt(calificacion_curso) <= -1) {
-        alert("Calificación menor a 0");
-    } else if (parseInt(calificacion_curso) > 10) {
-        alert("Calificación mayor a 10");
-    } else {
-
-        if (parseInt(calificacion_curso) <= 5) {
-            nota_curso = prompt("Introduce una nota para el curso");
-        }
-        $.post('Curso?operacion=calificar_Curso', {
-            id: id_Curso,
-            calificacion: calificacion_curso,
-            nota: nota_curso
-        }, function(respuesta) {
-            if (parseInt(respuesta) === 2) {
-                localStorage.setItem('mensaje', "Curso calificado");
-            } else if (parseInt(respuesta) === 3) {
-                localStorage.setItem('mensaje_error', "No se ha podido calificar el curso");
-            }
-            $(document).foundation();
-        });
-    }
-};
-
-
 var asignar_curso = function(id_curso, aceptado) {
     $.post('Curso?operacion=asignar_Curso', {
         id_Curso: id_curso,
         aceptado_Curso: aceptado
     }, function(respuesta) {
-        if (parseInt(respuesta) === 6) {
+        if (parseInt(respuesta) === 6 && aceptado === 'true') {
             localStorage.setItem('mensaje', "Curso asignado");
         } else if (parseInt(respuesta) === 7) {
             localStorage.setItem('mensaje_error', "No se ha podido realizar la acción");
+        } else {
+            console.log(respuesta);
+            consoloe.log(aceptado);
+            localStorage.setItem('mensaje', "Estudiante rechazado");
         }
         location.href = "profesorConf.html";
     });

@@ -48,7 +48,7 @@ public class GeneradorPDF {
         profesor_.setAlignment(Element.ALIGN_CENTER);
 
         try {
-            PdfWriter.getInstance(document, new FileOutputStream("/home/sainoba/NetBeansProjects/WebApplication1/build/web/data/certificados_estudiantes/"+curso_id+".pdf"));
+            PdfWriter.getInstance(document, new FileOutputStream("/home/jesus/Mamba/build/web/"+curso_id+".pdf"));
             document.open();
             document.add(titulo_);
             document.add(estudiante_);

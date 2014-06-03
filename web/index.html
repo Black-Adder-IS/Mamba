@@ -56,7 +56,7 @@
 
         <div id="myModal" class="reveal-modal" data-reveal>
             <h2>Elige el tipo de registro</h2>
-            <p class="lead">Puedes elegir entre maestro y alumno</p>
+            <p class="lead">Puedes elegir entre profesor y estudiante</p>
             <div class="panel">
                 <h5>Aprende</h5>
                 <p>Selecciona el nivel de curso que quieras tomar con el maestro que te agrade.</p>
@@ -64,14 +64,14 @@
             </div>
             <div class="panel">
                 <h5>Enseña</h5>
-                <p>Ofrece cursos eligiendo los horarios que quieras y a alumnos de tu agrado.</p>
+                <p>Ofrece cursos eligiendo los horarios que quieras y a estudiantes de tu agrado.</p>
                 <a href="#" class="small button" data-reveal-id="registroMaestroModal" data-reveal>Enseñar</a>
             </div>    <a class="close-reveal-modal">&#215;</a>
         </div>
 
         <div id="registroAlumnoModal" class="reveal-modal" data-reveal>
             <h2>
-                Registro de Alumno
+                Registro de Estudiante
             </h2>
             <form data-abide>
                 <div class="row">
@@ -79,9 +79,9 @@
                         <div class="input-wrapper">
                             <label>
                                 Nombre
-                                <input type="text" id="nombre_Estudiante" placeholder="min. 4 caracteres - max. 100 caracteres" pattern="\w{4,100}"/>
+                                <input type="text" id="nombre_Estudiante" placeholder="min. 4 caracteres - max. 100 caracteres" pattern="[a-zA-Z]{4,100}"/>
                             </label>
-                            <small class="error">Introduce un nombre válido (solo alfanumericos)</small>
+                            <small class="error">Introduce un nombre válido (solo abecedario latino)</small>
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
                         <div class="input-wrapper">
                             <label>
                                 Correo
-                                <input type="email" id="correo_Estudiante" placeholder="min. 4 caracteres - max. 50 caracteres"><!-- pattern="[\w]{1,10}@([\w-]{1,10}\.)[\w-]{1,28}"/-->
+                                <input type="text" id="correo_Estudiante" placeholder="min. 4 caracteres - max. 50 caracteres" pattern="^[^@]+@[a-z]+(\.[a-z]{2,4})+$">
                             </label>
                             <small class="error">Introduce un correo válido.</small>
                         </div>
@@ -112,7 +112,7 @@
                     <div class="large-12 columns text-center">
                         <br>
                         <br>
-                        <a href="#" id="registrarEstudiante" class="button">Registrar</a>
+                        <input type="button" id="registrarEstudiante" class="button" value="Registrar"/>
                     </div>
                 </div>
             </form>
@@ -124,7 +124,7 @@
 
         <div id="registroMaestroModal" class="reveal-modal" data-reveal>
             <h2>
-                Registro de Maestro
+                Registro de Profesor
             </h2>
             <form data-abide>
                 <div class="row">
@@ -134,7 +134,7 @@
                                 Nombre
                                 <input type="text" id="nombre_Profesor" placeholder="min. 4 caracteres - max. 100 caracteres" pattern="\w{4,100}"/>
                             </label>
-                            <small class="error">Introduce un nombre válido (solo alfanumericos)</small>
+                            <small class="error">Introduce un nombre válido (solo abecedario latino)</small>
                         </div>
                     </div>
                 </div>
@@ -165,7 +165,7 @@
                     <div class="large-12 columns text-center">
                         <br>
                         <br>
-                        <a href="#" id="registrarProfesor" class="button">Registrar</a>
+                        <input type="button" onclick="verificar_estudiante()" id="registrarProfesor" class="button" value="Registrar"/>
                     </div>
                 </div>
             </form>
@@ -199,7 +199,7 @@
             <div class="small-6 large-6 columns bounceInRight animated" >
                 <div class="panel" data-equalizer-watch>
                     <h5>Estudiante</h5>
-                    <p>Selecciona el nivel de curso que quieras tomar con el maestro que te agrade.</p>
+                    <p>Selecciona el nivel de curso que quieras tomar con el profesor que te agrade.</p>
                     <a href="#" class="small button"  data-reveal-id="registroAlumnoModal" data-reveal>Aprender</a>
                 </div>
             </div>

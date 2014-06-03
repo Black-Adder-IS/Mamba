@@ -14,8 +14,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -251,7 +249,7 @@ public class Profesor extends HttpServlet {
                     e.printStackTrace();
                 }
 
-            } else if (operacion.equals("obtener_Cursos_Espera")) {
+            } else if (operacion.equals("obtener_Id")) {
                 String correo = request.getParameter("correo_Profesor");
                 ConexionBD conexion_bd = new ConexionBD();
                 Connection conexion = conexion_bd.conectarBD();

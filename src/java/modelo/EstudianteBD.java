@@ -82,7 +82,7 @@ public class EstudianteBD extends ConexionBD{
     
     public int editar_estudiante(String correoA, String nombre, String correo, String contrasenia) {
         int ex = -1;
-        String query = "UPDATE `Escuela`.`Estudiante` SET";
+        String query = "";
         if (!nombre.equals("")) {
             query += " `estudiante_nombre`='" + nombre + "',";
         }
@@ -103,7 +103,6 @@ public class EstudianteBD extends ConexionBD{
         } else {
             return ex;
         }
-        query += " WHERE `estudiante_correo`='" + correoA + "';";
         try {
             Connection conexion = super.conectarBD();
             Statement st = conexion.createStatement();

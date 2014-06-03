@@ -161,7 +161,7 @@ public class CursoBD extends ConexionBD {
         return resultado != 0;
     }
 
-    public boolean crear_curso(String correo, String tinicio, String tfinal, String tipo) {
+    public int crear_curso(String correo, String tinicio, String tfinal, String tipo) {
         String consulta_1 = "SELECT * FROM `Escuela`.`Profesor` WHERE `profesor_correo`='" + correo + "' AND (`profesor_url_certificado` IS NULL OR `profesor_url_video` IS NULL)";
         String consulta_2 = "SELECT * FROM `Escuela`.`Curso` "
                 + "WHERE `profesor_correo`='" + correo + "' AND (('" + tinicio + "' BETWEEN curso_inicio AND curso_final) OR ('" + tfinal +"' BETWEEN curso_inicio AND curso_final));";
@@ -176,17 +176,19 @@ public class CursoBD extends ConexionBD {
         ResultSet resultado_2 = super.consulta(conexion, consulta_2);
 
         if (resultado_1 == null || resultado_2 == null) {
-            return false;
+            return 0;
         }
 
         try {
-            encontrado = resultado_1.next() || resultado_2.next();
+            if ((encontrado = resultado_1.next()))
+                return 1;
+            encontrado = resultado_2.next();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         if (encontrado) {
-            return false;
+            return 0;
         }
 
         try {
@@ -200,7 +202,7 @@ public class CursoBD extends ConexionBD {
         }
 
         super.desconectarBD(conexion);
-        return true;
+        return 2;
     }
 
     public boolean asignar_curso(String id, boolean asignar) {
@@ -293,7 +295,7 @@ public class CursoBD extends ConexionBD {
                 String profesor_ = resultado.getString("profesor_nombre");
                 controlador.GeneradorPDF.genera_pdf(curso_, estudiante_, promedio_, tipo_curso_, profesor_);
                 //Agregado por Marco, esto es para actualizar la base con la liga al pdf
-                String ruta = "http://localhost:8080/WebApplication1/data/certificados_estudiantes/" + id + ".pdf";
+                String ruta =   id + ".pdf";
                 consulta = "UPDATE `Escuela`.`Curso` SET `curso_url_certificado`='" + ruta + "' WHERE `curso_id`=" + id + ";";
                 actualiza(conexion, consulta);
             }

@@ -20,6 +20,29 @@
 
     </head>
     <body>
+        <div id="calificacion_modal" class="reveal-modal" data-reveal>
+            <h2>Califica al alumno</h2>
+            <label>Calificación
+                <select id="ruleta_calificacion">
+                    <option value="10">10</option>
+                    <option value="9">9</option>
+                    <option value="8">8</option>
+                    <option value="7">7</option>
+                    <option value="6">6</option>
+                    <option value="5">5</option>
+                    <option value="4">4</option>
+                    <option value="3">3</option>
+                    <option value="2">2</option>
+                    <option value="1">1</option>
+                    <option value="0">0</option>
+                </select>
+            </label>
+            <label id="nota_calificacion">Mensaje
+                <textarea id="nota_texto"></textarea>
+            </label>
+            <a id="calificar_boton" class="button">Calificar</a>
+            <a class="close-reveal-modal">&#215;</a>
+        </div>
         <div id="borrarModal" class="reveal-modal" data-reveal>
             <h2>¿Estás seguro que quieres borrar tu cuenta?</h2>
             <p class="lead">Toda tú información será borrada y no podrás recuperarla</p>
@@ -78,7 +101,7 @@
                                             <option value="Avanzado">Avanzado</option>
                                             <option value="Conversación">Conversación</option>
                                         </select>
-                                    </label>
+                                    </label >
                                 </div>
                             </div>
                             <div class="row">
@@ -148,25 +171,27 @@
                                 <div class="row">
                                     <div class="large-12 columns">
                                         <label class = "iluminado">Nombre
-                                            <input id="nombre_Profesor" type="text" placeholder="large-12.columns" />
+                                            <input id="nombre_Profesor" type="text" placeholder="min. 4 caracteres - max. 50 caracteres" pattern="\w{4,100}"/>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="large-6 columns">
                                         <label class = "iluminado">Correo
-                                            <input id="correo_Profesor" type="text" placeholder="large-4.columns" />
+                                            <input id="correo_Profesor" type="email" placeholder="min. 4 caracteres - max. 50 caracteres"/>
                                         </label>
                                     </div>
                                     <div class="large-6 columns">
                                         <label class = "iluminado">Constraseña
-                                            <input id="contrasenia_Profesor" type="password" placeholder="min. 6 caracteres" />
+                                            <input id="contrasenia_Profesor" type="password" placeholder="min. 6 caracteres - max. 50 caracteres" pattern=".{6,50}"/>
                                         </label>
                                     </div>
                                 </div>
+                                <div class="large-12 columns text-center"><a href="#" id="subir" class="button small">Guardar cambios</a></div>
                             </form>
-                                <div class="row" id="subirArchivos">
-                                </div>
+                            <div class="row" id="subirArchivos">
+                            </div>
+
                             <a href="#" class="button alert" data-reveal-id="borrarModal" data-reveal>Borrar Cuenta</a>
                         </div>
                     </div>
@@ -176,7 +201,7 @@
         <script src="js/vendor/jquery.js"></script>
         <script src="js/foundation.min.js"></script>
         <script>
-            $(document).foundation();
+                                        $(document).foundation();
         </script>
     </body>
 </html>

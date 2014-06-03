@@ -14,7 +14,7 @@ $( document ).ready(function() {
         }
         if ($("#profesor_radio").prop("checked")) {
             console.log('Entrando a post profesor, correo: ' + id + " contraseña: " + contrasena);
-            $.post('Profesor',{tipo:0,id:id,contrasena:contrasena},function(responseText) { 
+            $.post('../Profesor',{tipo:0,id:id,contrasena:contrasena},function(responseText) { 
                 console.log('Respuesta de post' + responseText);
                 if (responseText.trim() === "true"){
                     localStorage.setItem('tipo','profesor');
@@ -47,6 +47,6 @@ $( document ).ready(function() {
         $('#mensaje').text("Sesión Cerrada ");
         localStorage.removeItem("tipo");
         localStorage.removeItem("id");
-        window.location.href = "/WebApplication1/";
+        window.location.href = "http://localhost:8080/Mamba/index.html";
     });
 });

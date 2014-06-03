@@ -45,9 +45,11 @@ public class SubirArchivos extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        String id_Profesor = request.getParameter("id_profesor");
+        String id_Profesor = request.getParameter("id_Profesor");
         uploadDir = request.getSession().getServletContext().getRealPath("/");
+        
+        String [] formatos_Video = {"mp4", "wmv", "mov"};
+        PrintWriter out = response.getWriter();
         
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         if(!isMultipart){
@@ -73,21 +75,28 @@ public class SubirArchivos extends HttpServlet {
 
                     String fileName = FilenameUtils.getName(itemName);
                     File f = null;
-                    
                     if (fileName.substring(fileName.length()-3).equals("pdf")) {
                         f = checkExist(id_Profesor + ".pdf");
                         System.out.println(new ProfesorBD().editar_profesor(id_Profesor, "", "", "", "", "", id_Profesor + ".pdf"));
-                    }  if (fileName.substring(fileName.length()-3).equals("mp4")) {
-                        f = checkExist(id_Profesor + ".mp4");
-                        System.out.println(new ProfesorBD().editar_profesor(id_Profesor, "", "", "", "", id_Profesor + ".mp4", ""));
                     }
+                    String formato = fileName.substring(fileName.length()-3);
+                    for (int i = 0; i < formatos_Video.length; i++)
+                        if (formato.equals(formatos_Video[i])) {
+                            f = checkExist(id_Profesor + "." + formato);
+                            System.out.println(new ProfesorBD().editar_profesor(id_Profesor, "", "", "", "", id_Profesor + "." + formato, ""));
+                        }
                     
                     try {
                         item.write(f);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-
+                    out.println("<html><head>\n" +
+                                "<meta http-equiv=\"Refresh\" content=\"0;url=http://localhost:8080/Mamba/profesorConf.html\">\n" +
+                                "</head>\n" +
+                                "<body>\n" +
+                                "</body>\n" +
+                                "</html>");
             }
 
 

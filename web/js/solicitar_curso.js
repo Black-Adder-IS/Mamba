@@ -19,7 +19,7 @@ $( document ).ready(function() {
         
         
         //Pide los profesores que cazan con el filtro
-        $.post('Curso',{tipo:3, estudiante:localStorage.id, curso:curso},function(profesores) { 
+        $.post('../Curso',{tipo:3, estudiante:localStorage.id, curso:curso},function(profesores) { 
             renglon.remove();
             $('body').prepend(' <div id="solicitar_alert" data-alert class="alert-box alerta">Curso solicitado</div>');
         });

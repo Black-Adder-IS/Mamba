@@ -22,7 +22,8 @@ $(document).ready(function() {
         var nombreVar = $('#nombre_Estudiante').val();
         var correoVar1 = $('#correo_Estudiante').val();
         var contraseniaVar = $('#contrasenia_Estudiante').val();
-                
+        
+        console.log(correoVar);
         $.post('Estudiante?operacion=editar_Estudiante', {
             correo_Estudiante : correoVar,
             nuevo_nombre_Estudiante : nombreVar,
